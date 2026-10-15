@@ -4,17 +4,13 @@ import type { HeroContent } from "@/types/hero";
 // Layout and styling live in src/components/hero/ — touch this file for text only.
 
 export const heroContent: HeroContent = {
-  badge: "Now in beta",
-  headline: "Build something\ngreat together",
-  subheadline: "The platform for modern teams",
+  badge: "Executive Chauffeur Services",
+  headline: "Your Journey Deserves More Than a Ride",
+  subheadline: "",
   description:
-    "Uts Blue helps you ship faster, collaborate better, and stay aligned — from first commit to production.",
+    "Experience luxury chauffeur services across London and beyond, with professional drivers, premium vehicles and a journey planned around your needs.",
   cta: [
-    { label: "Get started", href: "/signup", variant: "primary" },
-    { label: "Learn more", href: "/about", variant: "secondary" },
+    { label: "Book Your Chauffeur", href: "/book", variant: "primary" },
+    { label: "Explore Our Fleet", href: "/fleet", variant: "secondary" },
   ],
-  image: {
-    src: "/hero-placeholder.png",
-    alt: "Product screenshot",
-  },
 };

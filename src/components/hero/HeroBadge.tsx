@@ -4,9 +4,10 @@ interface HeroBadgeProps {
 
 export function HeroBadge({ text }: HeroBadgeProps) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-300">
-      <span className="h-1.5 w-1.5 rounded-full bg-blue-500" />
-      {text}
-    </span>
+    <div className="flex items-center justify-center gap-3">
+      <span className="h-px w-16 bg-white/50" />
+      <span className="text-xs font-medium uppercase tracking-widest text-white/80">{text}</span>
+      <span className="h-px w-16 bg-white/50" />
+    </div>
   );
 }

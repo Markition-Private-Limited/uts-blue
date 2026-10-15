@@ -12,6 +12,8 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Site always uses light/white base regardless of OS dark mode */
+
 body {
   background: var(--background);
   color: var(--foreground);

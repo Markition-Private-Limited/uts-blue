@@ -1,49 +1,52 @@
 import { HeroBadge } from "./HeroBadge";
 import { HeroCTA } from "./HeroCTA";
 import { HeroHeadline } from "./HeroHeadline";
-import { HeroImage } from "./HeroImage";
+import { HeroBookingBar } from "./HeroBookingBar";
 import { heroContent } from "@/content/hero.content";
 
-// ─── LAYOUT OWNER: this file controls the overall hero layout ─────────────────
-// Sub-components live next to this file — each one is independently editable.
-// Content (copy/text) lives in src/content/hero.content.ts.
+const BADGE_RADIUS = 52;
 
 export function HeroSection() {
-  const { badge, headline, subheadline, description, cta, image } = heroContent;
+  const { badge, headline, description, cta } = heroContent;
 
   return (
-    <section className="relative overflow-hidden bg-white">
-      {/* Background decoration */}
+    <section
+      className="relative flex min-h-screen flex-col overflow-hidden bg-white"
+      style={{
+        WebkitMaskImage: `radial-gradient(circle ${BADGE_RADIUS}px at 50% 100%, transparent ${BADGE_RADIUS}px, white ${BADGE_RADIUS + 1}px)`,
+        maskImage: `radial-gradient(circle ${BADGE_RADIUS}px at 50% 100%, transparent ${BADGE_RADIUS}px, white ${BADGE_RADIUS + 1}px)`,
+      }}
+    >
+      {/* Background image */}
       <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('/hero-bg.png')",
+          filter: "blur(4px)",
+          transform: "scale(1.05)",
+        }}
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
-      >
-        <div
-          className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-blue-400 to-indigo-600 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-          style={{ clipPath: "ellipse(50% 40% at 50% 50%)" }}
-        />
+      />
+
+      {/* Blue-tinted overlay */}
+      <div
+        className="absolute inset-0"
+        style={{ background: "#1E4FD926" }}
+        aria-hidden
+      />
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 pb-8 pt-40 lg:px-8">
+        <div className="flex w-full max-w-4xl flex-col items-center gap-8">
+          {badge && <HeroBadge text={badge} />}
+          <HeroHeadline headline={headline} description={description} />
+          <HeroCTA buttons={cta} />
+        </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 lg:py-40">
-        <div className="flex flex-col items-start gap-10 lg:flex-row lg:items-center lg:gap-16">
-          {/* Left column — text */}
-          <div className="flex flex-1 flex-col gap-8">
-            {badge && <HeroBadge text={badge} />}
-            <HeroHeadline
-              headline={headline}
-              subheadline={subheadline}
-              description={description}
-            />
-            <HeroCTA buttons={cta} />
-          </div>
-
-          {/* Right column — visual */}
-          {image && (
-            <div className="w-full flex-1">
-              <HeroImage src={image.src} alt={image.alt} />
-            </div>
-          )}
-        </div>
+      {/* Booking bar */}
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6 pb-14 lg:px-8">
+        <HeroBookingBar />
       </div>
     </section>
   );
