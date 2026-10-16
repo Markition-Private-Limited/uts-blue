@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 
 const CARDS = [
   { src: "/about/driver-smile.jpg",   alt: "Professional driver smiling" },
@@ -17,7 +17,7 @@ const ANGLE_STEP   = 72;                    // 360° ÷ 5 cards = evenly fills t
 const RADIUS       = 340;                   // cylinder radius — smaller = cards closer together
 const PERSPECTIVE  = 3200;                  // very high = almost flat, organised look
 const CARD_W       = 188;                   // card width  (px)
-const CARD_H       = 290;                   // card height (px)
+const CARD_H       = 360;                   // card height (px)
 const TILT_X       = -1;                    // barely any top-down tilt
 const CENTER_IDX   = Math.floor(TOTAL / 2); // 2
 // Shadow: same width as card, reaches exactly 20% of card height downward
@@ -31,31 +31,56 @@ export function AboutCarousel() {
   // Drag state
   const dragStart   = useRef<number | null>(null);
   const dragOrigin  = useRef(0);
+  const hasDragged  = useRef(false);
+  const clickTarget = useRef<number | null>(null);
+
+  // Bring card i to the front of the cylinder
+  const focusCard = useCallback((i: number) => {
+    const cardAngle = (i - CENTER_IDX) * ANGLE_STEP;
+    setRotation(-cardAngle);
+  }, []);
+
+  // Auto-advance every 3.5 s; pause while dragging
+  const autoRef = useRef(0);
+  useEffect(() => {
+    const tick = () => {
+      if (dragStart.current !== null) return;
+      autoRef.current = (autoRef.current + 1) % TOTAL;
+      focusCard(autoRef.current);
+    };
+    const id = setInterval(tick, 3500);
+    return () => clearInterval(id);
+  }, [focusCard]);
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
     dragStart.current  = e.clientX;
     dragOrigin.current = rotation;
+    hasDragged.current = false;
+    // Record which card (if any) was the original press target
+    const cardEl = (e.target as HTMLElement).closest('[data-card-index]') as HTMLElement | null;
+    clickTarget.current = cardEl ? parseInt(cardEl.dataset.cardIndex!, 10) : null;
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
   }, [rotation]);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (dragStart.current === null) return;
+    if (Math.abs(e.clientX - dragStart.current) > 5) hasDragged.current = true;
     const delta = (e.clientX - dragStart.current) * 0.25;
     setRotation(dragOrigin.current + delta);
   }, []);
 
   const onPointerUp = useCallback(() => {
     dragStart.current = null;
-    // Snap to nearest card
-    const snapped = Math.round(rotation / ANGLE_STEP) * ANGLE_STEP;
-    setRotation(snapped);
-  }, [rotation]);
-
-  // Click a card → rotate the cylinder so that card moves to center
-  const focusCard = (i: number) => {
-    const cardAngle = (i - CENTER_IDX) * ANGLE_STEP; // card's natural angle
-    setRotation(-cardAngle);
-  };
+    if (!hasDragged.current && clickTarget.current !== null) {
+      // Tap on a card — bring it to front
+      focusCard(clickTarget.current);
+    } else {
+      // Drag ended — snap to nearest card
+      const snapped = Math.round(rotation / ANGLE_STEP) * ANGLE_STEP;
+      setRotation(snapped);
+    }
+    clickTarget.current = null;
+  }, [rotation, focusCard]);
 
   return (
     <div
@@ -72,7 +97,7 @@ export function AboutCarousel() {
           transformStyle: "preserve-3d",
           // rotation = user-controlled spin; TILT_X = subtle top-down camera angle
           transform: `translateX(0) rotateX(${TILT_X}deg) rotateY(${rotation}deg)`,
-          transition: dragStart.current !== null ? "none" : "transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94)",
+          transition: dragStart.current !== null ? "none" : "transform 1.1s cubic-bezier(0.25,0.46,0.45,0.94)",
         }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -90,14 +115,14 @@ export function AboutCarousel() {
           return (
             <div
               key={card.src}
-              onClick={() => focusCard(i)}
+              data-card-index={i}
               style={{
                 position: "absolute",
                 top: 0,
                 left: 0,
                 width: CARD_W,
                 marginLeft: -CARD_W / 2,
-                cursor: "pointer",
+                cursor: isFront ? "grab" : "pointer",
                 // Place card on cylinder surface: rotate around Y, then push out along card's own Z
                 transform: `rotateY(${cardAngle}deg) translateZ(${RADIUS}px)`,
                 opacity: 1,

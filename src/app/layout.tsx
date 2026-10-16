@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Arimo } from "next/font/google";
-import { LenisProvider } from "@/providers/LenisProvider";
+import { SmoothScrollProvider } from "@/providers/SmoothScrollProvider";
 import "./globals.css";
 import { FooterSection } from "@/components/footer";
 
@@ -19,10 +19,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${arimo.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-white text-gray-900 font-[family-name:var(--font-arimo)]">
-        <LenisProvider>
+        <SmoothScrollProvider>
           {children}
           <FooterSection />
-        </LenisProvider>
+        </SmoothScrollProvider>
       </body>
     </html>
   );

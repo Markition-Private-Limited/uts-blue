@@ -1,31 +1,51 @@
-import { HeroBadge } from "@/components/hero/HeroBadge";
-import { AboutCarousel } from "./AboutCarousel";
+'use client'
+
+import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
+import { HeroBadge } from '@/components/hero/HeroBadge'
+import { AboutCarousel } from './AboutCarousel'
+
+const ease = [0.22, 1, 0.36, 1] as const
 
 export function AboutSection() {
+  const ref = useRef<HTMLDivElement>(null)
+  const inView = useInView(ref, { once: true, amount: 0.3 })
+
   return (
-    <section className="w-full overflow-hidden bg-white py-20">
+    <section className="w-full overflow-hidden rounded-t-[56px] bg-white pt-12 pb-0">
       {/* Text content */}
-      <div className="mx-auto flex max-w-2xl flex-col items-center gap-5 px-6 text-center">
+      <motion.div
+        ref={ref}
+        className="mx-auto flex max-w-4xl flex-col items-center gap-3 px-6 text-center"
+        initial={{ opacity: 0, y: 40 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, ease }}
+      >
         <HeroBadge text="Executive Chauffeur Services" />
 
         <h2 className="text-4xl font-bold leading-tight tracking-tight text-gray-900">
           More Than a Ride.
           <br />
-          A Better{" "}
-          <span style={{ color: "#1648D8" }}>Way to Travel</span>
+          A Better{' '}
+          <span style={{ color: '#1648D8' }}>Way to Travel</span>
         </h2>
 
-        <p className="text-sm leading-relaxed text-gray-500">
-          Every journey should feel effortless. From everyday business travel to special occasions
-          and airport transfers, United Travel Services brings together comfort, reliability and
-          personal service to make every mile count.
+        <p className="text-sm leading-relaxed text-gray-500 max-w-3xl">
+          From everyday business travel to special occasions and airport transfers, United Travel
+          Services brings together comfort, reliability and personal service to make every mile
+          count. Professional chauffeurs, premium vehicles and a journey planned around you.
         </p>
-      </div>
+      </motion.div>
 
       {/* Fan carousel */}
-      <div className="mt-14 px-6">
+      <motion.div
+        className="mt-8 px-6 -mb-16"
+        initial={{ opacity: 0, y: 32 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.85, delay: 0.18, ease }}
+      >
         <AboutCarousel />
-      </div>
+      </motion.div>
     </section>
-  );
+  )
 }

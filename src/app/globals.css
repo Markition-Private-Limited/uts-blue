@@ -19,3 +19,32 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Hide native scrollbar */
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+/*
+  WhySection RIDES vertical ticker:
+  Inner wrapper is 200% tall (two copies stacked).
+  -50% → 0% means content scrolls downward: second copy exits bottom, first enters from top.
+*/
+@keyframes rides-vertical-down {
+  from { transform: translateY(-50%); }
+  to   { transform: translateY(0); }
+}
+
+.rides-ticker-inner {
+  height: 200%;
+  animation: rides-vertical-down 3.8s linear infinite;
+}

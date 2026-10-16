@@ -1,9 +1,11 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { useRef, useEffect, useState } from 'react'
 import { HeroBadge } from '@/components/hero/HeroBadge'
+
+const ease = [0.22, 1, 0.36, 1] as const
 
 // ─── Card data ────────────────────────────────────────────────────────────────
 const CARDS = [
@@ -12,40 +14,48 @@ const CARDS = [
     img: '/services/airport-transfer.jpg',
     icon: '/services/icons/5.svg',
     link: '/services/airport-transfer',
-    title: 'Airport Transfer',
-    desc: 'Premier airport transfers with real-time flight tracking, proactive delay adjustments, and professional luggage assistance.',
+    title: 'Airport Transfers',
+    desc: 'Enjoy a smoother airport journey with professional chauffeur service, comfortable vehicles, and coordinated pickup arrangements.',
   },
   {
     num: '02',
-    img: '/services/city-to-city.webp',
+    img: '/services/corporate-chauffeur.jpg',
     icon: '/services/icons/1.svg',
-    link: '/services/city-to-city',
-    title: 'City to City',
-    desc: 'Premium intercity travel between major cities in absolute comfort and privacy, tailored to your schedule.',
+    link: '/services/corporate-chauffeur',
+    title: 'Corporate Chauffeur',
+    desc: 'Make every business journey count with discreet, professional chauffeur services designed around your schedule, meetings and business commitments.',
   },
   {
     num: '03',
-    img: '/services/city-trip.webp',
+    img: '/services/cruise-seaport.jpg',
     icon: '/services/icons/3.svg',
-    link: '/services/city-trip',
-    title: 'City Trip',
-    desc: 'Private point-to-point travel within the city — relax or conduct business uninterrupted on a direct journey.',
+    link: '/services/cruise-seaport',
+    title: 'Cruise and Seaport Transfers',
+    desc: 'Travel to your cruise terminal in comfort with a private chauffeur service that takes the stress out of getting to your departure point.',
   },
   {
     num: '04',
-    img: '/services/day-service.webp',
+    img: '/services/sightseeing-chauffeur.jpg',
     icon: '/services/icons/4.svg',
-    link: '/services/day-service',
-    title: 'Day Service',
-    desc: 'Full-day dedicated transport for back-to-back meetings, VIP hosting, and multi-location itineraries.',
+    link: '/services/sightseeing',
+    title: 'Sightseeing Chauffeur',
+    desc: 'Discover London\'s famous landmarks and the surrounding areas at your own pace, with the comfort of a private vehicle and a professional driver.',
   },
   {
     num: '05',
-    img: '/services/hourly-chauffeur.jpg',
+    img: '/services/intercity-travel.jpg',
     icon: '/services/icons/2.svg',
-    link: '/services/hourly-booking',
-    title: 'Hourly Chauffeur',
-    desc: 'A dedicated private chauffeur at your disposal for dynamic itineraries, multiple stops, and complete scheduling flexibility.',
+    link: '/services/intercity-travel',
+    title: 'Intercity Travel',
+    desc: 'Travel between cities without the hassle of driving, parking or navigating unfamiliar routes. Sit back and enjoy a comfortable journey from door to door.',
+  },
+  {
+    num: '06',
+    img: '/services/special-events.jpg',
+    icon: '/services/icons/4.svg',
+    link: '/services/special-events',
+    title: 'Special Events & Private Travel',
+    desc: 'Arrive in style for celebrations, important occasions and private engagements with a chauffeur service tailored to your plans.',
   },
 ]
 
@@ -77,14 +87,6 @@ function ServiceCard({
   const targetScale = 1 - (total - 1 - index) * 0.03
   const cardScale = useTransform(scrollYProgress, [index / total, 1], [1, targetScale])
 
-  // Parallax: image travels from +12% (bottom) to -12% (top) as the card scrolls through its window.
-  // The image is taller than the card (115%) so the shift never exposes a gap.
-  const imageY = useTransform(
-    scrollYProgress,
-    [index / total, (index + 1) / total],
-    ['12%', '-12%']
-  )
-
   return (
     <div className="sticky" style={{ top: `${80 + index * 28}px` }}>
       <motion.div
@@ -94,43 +96,36 @@ function ServiceCard({
         <div
           className="relative w-full rounded-2xl overflow-hidden"
           style={{
-            background: '#0d1a3a',
             boxShadow: '0 12px 48px rgba(0,0,0,0.35)',
             height: 'clamp(340px, 55vw, 580px)',
           }}
         >
-          {/* Background image — 115% tall so parallax shift never exposes a gap */}
-          <div className="absolute inset-0 overflow-hidden">
-            <motion.div
-              style={{ y: imageY, willChange: 'transform' }}
-              className="absolute inset-x-0 -top-[7.5%] h-[115%]"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={card.img}
-                alt={card.title}
-                className="w-full h-full object-cover object-center"
-                style={{ filter: 'brightness(0.68)' }}
-              />
-            </motion.div>
-            {/* Bottom-up dark gradient */}
+          {/* Background image */}
+          <div className="absolute inset-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={card.img}
+              alt={card.title}
+              className="w-full h-full object-cover object-center"
+            />
+            {/* Blue warm overlay */}
+            <div
+              className="absolute inset-0"
+              style={{ background: 'rgba(22, 72, 216, 0.28)' }}
+            />
+            {/* Bottom-up dark gradient for text legibility */}
             <div
               className="absolute inset-0"
               style={{
                 background:
-                  'linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.92) 100%)',
+                  'linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.75) 100%)',
               }}
             />
-            {/* Subtle blue tint overlay — matches site brand */}
-            <div
-              className="absolute inset-0"
-              style={{ background: '#1648D815' }}
-            />
-          </div> {/* overflow-hidden wrapper */}
+          </div>
 
-          {/* Card number — top left */}
+          {/* Card number — top center */}
           <span
-            className="absolute top-5 left-5 text-white/50 text-sm tracking-widest select-none"
+            className="absolute top-5 left-1/2 -translate-x-1/2 text-white/50 text-sm tracking-widest select-none"
             style={{ fontVariantNumeric: 'tabular-nums' }}
           >
             {card.num}
@@ -151,23 +146,23 @@ function ServiceCard({
             <img src={card.icon} alt="" style={{ width: 18, height: 18 }} />
           </div>
 
-          {/* Bottom info panel — gradient border trick */}
+          {/* Bottom info panel — glassmorphism */}
           <div
             className="absolute bottom-4 left-4 right-4"
             style={{
               borderRadius: 16,
               padding: '1px',
               background:
-                'linear-gradient(110deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.06) 60%, rgba(22,72,216,0.25) 100%)',
+                'linear-gradient(110deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.10) 60%, rgba(22,72,216,0.40) 100%)',
             }}
           >
             <div
               style={{
                 borderRadius: 15,
                 padding: 'clamp(14px, 2vw, 20px) clamp(16px, 2.5vw, 24px)',
-                background: 'rgba(255,255,255,0.08)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
+                background: 'rgba(0,0,0,0.24)',
+                backdropFilter: 'blur(6px)',
+                WebkitBackdropFilter: 'blur(6px)',
               }}
             >
               <h3
@@ -200,7 +195,9 @@ function ServiceCard({
 // ─── Section ──────────────────────────────────────────────────────────────────
 export function ServicesSection() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const headerRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile()
+  const headerInView = useInView(headerRef, { once: true, amount: 0.4 })
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -213,11 +210,17 @@ export function ServicesSection() {
   return (
     <section className="w-full bg-white">
       {/* Header text */}
-      <div className="px-4 sm:px-8 pt-12 sm:pt-20 pb-10 sm:pb-12 text-center">
+      <motion.div
+        ref={headerRef}
+        initial={{ opacity: 0, y: 36 }}
+        animate={headerInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, ease }}
+        className="px-4 sm:px-8 pt-0 sm:pt-2 pb-6 sm:pb-8 text-center"
+      >
         <HeroBadge text="Our Services" />
 
         <h2
-          className="text-gray-900 leading-tight mt-5 mb-5"
+          className="text-gray-900 leading-tight mt-3 mb-3"
           style={{
             fontWeight: 300,
             fontSize: 'clamp(26px, 5vw, 46px)',
@@ -238,7 +241,7 @@ export function ServicesSection() {
           reliability, and exceptional service. From airport transfers to corporate journeys,
           every ride is designed to make growing more effortless.
         </p>
-      </div>
+      </motion.div>
 
       {/* Stacking cards scroll container */}
       <div

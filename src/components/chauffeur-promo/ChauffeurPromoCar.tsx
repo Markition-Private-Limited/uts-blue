@@ -97,13 +97,16 @@ export function ChauffeurPromoCar({ src, alt }: ChauffeurPromoCarProps) {
     let raf = 0;
     let driveAnim: Animation | null = null;
     let bodyAnim: Animation | null = null;
+    let beepAnim: Animation | null = null;
 
     const reset = () => {
       cancelAnimationFrame(raf);
       driveAnim?.cancel();
       bodyAnim?.cancel();
+      beepAnim?.cancel();
       driveAnim = null;
       bodyAnim = null;
+      beepAnim = null;
       smoke.replaceChildren();
       mover.style.opacity = "0";
       playing = false;
@@ -215,6 +218,41 @@ export function ChauffeurPromoCar({ src, alt }: ChauffeurPromoCarProps) {
           if (!visible) window.setTimeout(reset, 2400);
         })
         .catch(() => {});
+
+      bodyAnim.finished
+        .then(() => {
+          if (!body || !visible) return;
+          // Clear the fill-frozen WAAPI state
+          bodyAnim?.cancel();
+          /*
+           * Double-beep idle pulse — mimics pressing a car key fob:
+           * two quick bounces, then a long pause before repeating.
+           * scale + tiny vertical lift gives a "chirp" feel.
+           */
+          beepAnim = body.animate(
+            [
+              { transform: "scale(1) translateY(0px)",     offset: 0    },
+              { transform: "scale(1.045) translateY(-4px)", offset: 0.07 },
+              { transform: "scale(0.97) translateY(2px)",  offset: 0.16 },
+              { transform: "scale(1.02) translateY(-1px)", offset: 0.22 },
+              { transform: "scale(1) translateY(0px)",     offset: 0.30 },
+              // second beep
+              { transform: "scale(1.045) translateY(-4px)", offset: 0.40 },
+              { transform: "scale(0.97) translateY(2px)",  offset: 0.49 },
+              { transform: "scale(1.02) translateY(-1px)", offset: 0.55 },
+              { transform: "scale(1) translateY(0px)",     offset: 0.63 },
+              // rest until next cycle
+              { transform: "scale(1) translateY(0px)",     offset: 1    },
+            ],
+            {
+              duration: 3200,
+              easing: "ease-in-out",
+              iterations: Infinity,
+              delay: 400,
+            },
+          );
+        })
+        .catch(() => {});
     };
 
     const observer = new IntersectionObserver(
@@ -233,6 +271,7 @@ export function ChauffeurPromoCar({ src, alt }: ChauffeurPromoCarProps) {
       cancelAnimationFrame(raf);
       driveAnim?.cancel();
       bodyAnim?.cancel();
+      beepAnim?.cancel();
     };
   }, []);
 

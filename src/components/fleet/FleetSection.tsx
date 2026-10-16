@@ -1,8 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-import { useRef, useState, useCallback, useEffect } from 'react'
-import { Phone, CalendarCheck, MessageSquare, Briefcase, Users } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { Phone, CalendarCheck, MessageSquare, Briefcase, Users, ChevronLeft, ChevronRight } from 'lucide-react'
 import { HeroBadge } from '@/components/hero/HeroBadge'
 
 // ─── Fleet data ───────────────────────────────────────────────────────────────
@@ -57,19 +58,20 @@ const FLEET = [
   },
 ]
 
-const CARDS_PER_PAGE = 3
-const PAGE_COUNT = Math.ceil(FLEET.length / CARDS_PER_PAGE)
-const GAP = 16       // px — gap-4
-const H_PAD = 24     // px — px-6 on each side
+const VISIBLE = 3
+const PAGE_COUNT = Math.ceil(FLEET.length / VISIBLE)
+const ease = [0.22, 1, 0.36, 1] as const
 
-// ─── Individual fleet card ────────────────────────────────────────────────────
-function FleetCard({ car }: { car: (typeof FLEET)[number] }) {
+// ─── Individual fleet card ─────────────────────────────────────────────────────
+function FleetCard({ car, i }: { car: (typeof FLEET)[number]; i: number }) {
   return (
-    <div
-      className="fleet-card flex-none snap-start rounded-2xl overflow-hidden"
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.55, delay: i * 0.09, ease }}
+      className="flex-none rounded-2xl overflow-hidden"
       style={{
-        // 3 cards fill the visible area (track width minus horizontal padding minus gaps)
-        width: `calc((100% - ${2 * H_PAD + GAP * (CARDS_PER_PAGE - 1)}px) / ${CARDS_PER_PAGE})`,
+        width: `calc((100% - ${16 * (VISIBLE - 1)}px) / ${VISIBLE})`,
         background: 'linear-gradient(160deg, #ffffff 0%, #eef2ff 100%)',
         border: '1px solid #dde5f7',
         boxShadow: '0 4px 24px rgba(22,72,216,0.07)',
@@ -120,90 +122,45 @@ function FleetCard({ car }: { car: (typeof FLEET)[number] }) {
         </button>
         <button className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-blue-200 py-2 text-[12px] font-semibold text-blue-700 transition-colors hover:bg-blue-50">
           <MessageSquare size={12} />
-          Check Enquiry
+          Enquiry
         </button>
       </div>
-    </div>
+    </motion.div>
   )
+}
+
+// ─── Slide variants (direction-aware) ─────────────────────────────────────────
+const slideVariants = {
+  enter: (dir: number) => ({ x: dir * 80, opacity: 0 }),
+  center: { x: 0, opacity: 1 },
+  exit: (dir: number) => ({ x: -dir * 80, opacity: 0 }),
 }
 
 // ─── Section ──────────────────────────────────────────────────────────────────
 export function FleetSection() {
-  const trackRef = useRef<HTMLDivElement>(null)
-  const [activePage, setActivePage] = useState(0)
+  const [page, setPage] = useState(0)
+  const [dir, setDir] = useState(1)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const headerInView = useInView(headerRef, { once: true, amount: 0.4 })
 
-  // Drag-scroll state
-  const dragging = useRef(false)
-  const dragStartX = useRef(0)
-  const dragScrollLeft = useRef(0)
+  const pageCards = FLEET.slice(page * VISIBLE, (page + 1) * VISIBLE)
 
-  // ── Scroll → dot sync ──────────────────────────────────────────────────────
-  const onScroll = useCallback(() => {
-    const track = trackRef.current
-    if (!track) return
-    const cardWidth = (track.clientWidth - 2 * H_PAD - GAP * (CARDS_PER_PAGE - 1)) / CARDS_PER_PAGE
-    const pageWidth = cardWidth * CARDS_PER_PAGE + GAP * CARDS_PER_PAGE
-    const page = Math.round(track.scrollLeft / pageWidth)
-    setActivePage(Math.min(page, PAGE_COUNT - 1))
-  }, [])
-
-  useEffect(() => {
-    const track = trackRef.current
-    if (!track) return
-    track.addEventListener('scroll', onScroll, { passive: true })
-    return () => track.removeEventListener('scroll', onScroll)
-  }, [onScroll])
-
-  // ── Drag handlers ──────────────────────────────────────────────────────────
-  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    const track = trackRef.current
-    if (!track) return
-    dragging.current = true
-    dragStartX.current = e.pageX - track.getBoundingClientRect().left
-    dragScrollLeft.current = track.scrollLeft
-    // Disable snap while dragging so it doesn't fight the drag
-    track.style.scrollSnapType = 'none'
-  }, [])
-
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (!dragging.current) return
-    e.preventDefault()
-    const track = trackRef.current
-    if (!track) return
-    const x = e.pageX - track.getBoundingClientRect().left
-    track.scrollLeft = dragScrollLeft.current - (x - dragStartX.current)
-  }, [])
-
-  const handleDragEnd = useCallback(() => {
-    if (!dragging.current) return
-    dragging.current = false
-    const track = trackRef.current
-    if (!track) return
-    // Re-enable snap — browser will snap to nearest card
-    track.style.scrollSnapType = 'x mandatory'
-  }, [])
-
-  // ── Dot click → scroll to page ────────────────────────────────────────────
-  const goToPage = (page: number) => {
-    const track = trackRef.current
-    if (!track) return
-    const cards = track.querySelectorAll<HTMLElement>('.fleet-card')
-    const target = cards[page * CARDS_PER_PAGE]
-    if (!target) return
-    track.scrollTo({ left: target.offsetLeft - H_PAD, behavior: 'smooth' })
+  const navigate = (newPage: number) => {
+    if (newPage === page) return
+    setDir(newPage > page ? 1 : -1)
+    setPage(newPage)
   }
 
   return (
-    <section className="w-full bg-white py-16 sm:py-24 overflow-hidden">
-      {/* Scoped CSS: hide webkit scrollbar + grab cursor */}
-      <style>{`
-        .fleet-track::-webkit-scrollbar { display: none; }
-        .fleet-track { cursor: grab; }
-        .fleet-track.is-dragging { cursor: grabbing; }
-      `}</style>
-
+    <section className="w-full bg-white pt-6 pb-16 sm:pt-8 sm:pb-24">
       {/* Header */}
-      <div className="mx-auto max-w-2xl px-6 text-center mb-12">
+      <motion.div
+        ref={headerRef}
+        initial={{ opacity: 0, y: 36 }}
+        animate={headerInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.75, ease }}
+        className="mx-auto max-w-2xl px-6 text-center mb-12"
+      >
         <HeroBadge text="Our Premium Fleet" />
         <h2 className="mt-5 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
           Luxury Chauffeur Cars for{' '}
@@ -213,46 +170,59 @@ export function FleetSection() {
           Discover a carefully selected range of chauffeur vehicles for business travel, airport
           transfers and special occasions. Choose the comfort and space that suit your journey.
         </p>
+      </motion.div>
+
+      {/* Carousel */}
+      <div className="px-6 overflow-hidden">
+        <AnimatePresence mode="wait" custom={dir}>
+          <motion.div
+            key={page}
+            custom={dir}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.5, ease }}
+            className="flex gap-4"
+          >
+            {pageCards.map((car, i) => (
+              <FleetCard key={car.id} car={car} i={i} />
+            ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
-      {/* Carousel track */}
-      <div
-        ref={trackRef}
-        className="fleet-track flex overflow-x-auto select-none"
-        style={{
-          gap: GAP,
-          paddingLeft: H_PAD,
-          paddingRight: H_PAD,
-          scrollSnapType: 'x mandatory',
-          WebkitOverflowScrolling: 'touch',
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-        }}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleDragEnd}
-        onMouseLeave={handleDragEnd}
-      >
-        {FLEET.map((car) => (
-          <FleetCard key={car.id} car={car} />
-        ))}
-      </div>
+      {/* Navigation */}
+      <div className="mt-8 flex items-center justify-center gap-3">
+        <button
+          onClick={() => navigate(Math.max(0, page - 1))}
+          disabled={page === 0}
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-blue-200 text-blue-600 transition-all hover:bg-blue-50 disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          <ChevronLeft size={16} />
+        </button>
 
-      {/* Pagination dots — one per page */}
-      <div className="mt-8 flex items-center justify-center gap-2">
         {Array.from({ length: PAGE_COUNT }).map((_, i) => (
           <button
             key={i}
-            onClick={() => goToPage(i)}
+            onClick={() => navigate(i)}
             aria-label={`Go to page ${i + 1}`}
             className="rounded-full transition-all duration-300"
             style={{
-              width: activePage === i ? 20 : 8,
+              width: page === i ? 20 : 8,
               height: 8,
-              background: activePage === i ? '#1648D8' : '#d1d5f5',
+              background: page === i ? '#1648D8' : '#d1d5f5',
             }}
           />
         ))}
+
+        <button
+          onClick={() => navigate(Math.min(PAGE_COUNT - 1, page + 1))}
+          disabled={page === PAGE_COUNT - 1}
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-blue-200 text-blue-600 transition-all hover:bg-blue-50 disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          <ChevronRight size={16} />
+        </button>
       </div>
     </section>
   )

@@ -1,7 +1,18 @@
 'use client'
-import { useLenis } from '@/hooks/useLenis'
+// lenis/react official integration
+import { ReactLenis } from 'lenis/react'
 
 export function LenisProvider({ children }: { children: React.ReactNode }) {
-  useLenis()
-  return <>{children}</>
+  return (
+    <ReactLenis
+      root
+      options={{
+        duration: 1.4,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        smoothWheel: true,
+      }}
+    >
+      {children}
+    </ReactLenis>
+  )
 }

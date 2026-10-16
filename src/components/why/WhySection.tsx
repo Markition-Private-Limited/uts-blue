@@ -3,57 +3,142 @@
 import Image from 'next/image'
 import { ArrowRight } from 'lucide-react'
 import { HeroBadge } from '@/components/hero/HeroBadge'
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import {
+  motion,
+  useInView,
+  useScroll,
+  useTransform,
+  useMotionValue,
+  animate,
+} from 'framer-motion'
+import { useRef, useEffect } from 'react'
 
-function StatCircle({ number, label }: { number: string; label: string }) {
+// ─── Animated count-up number ─────────────────────────────────────────────────
+function AnimatedNumber({ value, suffix = '' }: { value: number; suffix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, amount: 0.5 })
+  const count = useMotionValue(0)
+  const rounded = useTransform(count, (v) => Math.round(v))
+
+  useEffect(() => {
+    if (!inView) return
+    const controls = animate(count, value, { duration: 2, ease: 'easeOut' })
+    return controls.stop
+  }, [inView, count, value])
+
+  return (
+    <span ref={ref} className="text-[40px] font-bold leading-none text-white">
+      <motion.span>{rounded}</motion.span>
+      {suffix}
+    </span>
+  )
+}
+
+function StatCircle({ value, suffix, label }: { value: number; suffix?: string; label: string }) {
   return (
     <div
       className="flex h-[140px] w-[140px] flex-col items-center justify-center rounded-full"
       style={{ background: 'rgba(0,0,0,0.22)', border: '1px solid rgba(255,255,255,0.12)' }}
     >
-      <span className="text-[40px] font-bold leading-none text-white">{number}</span>
+      <AnimatedNumber value={value} suffix={suffix} />
       <span className="mt-1.5 text-[12px] text-white/60">{label}</span>
     </div>
   )
 }
 
+const ease = [0.22, 1, 0.36, 1] as const
+
 export function WhySection() {
   const colRef = useRef<HTMLDivElement>(null)
   const inView = useInView(colRef, { once: true, amount: 0.4 })
+  const sectionRef = useRef<HTMLElement>(null)
+  const sectionInView = useInView(sectionRef, { once: true, amount: 0.2 })
+
+  // Parallax: each image moves at a slightly different rate
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  })
+  const img1Y = useTransform(scrollYProgress, [0, 1], ['-12%', '12%'])
+  const img2Y = useTransform(scrollYProgress, [0, 1], ['10%', '-10%'])
+  const img3Y = useTransform(scrollYProgress, [0, 1], ['-8%', '8%'])
+  const img4Y = useTransform(scrollYProgress, [0, 1], ['8%', '-8%'])
 
   return (
     <section
-      className="relative w-full overflow-hidden"
+      ref={sectionRef}
+      className="relative overflow-hidden rounded-3xl mx-6 my-6 lg:mx-16 lg:my-10"
       style={{ background: '#1E4FD9' }}
     >
 
-      <div className="relative z-10 mx-auto max-w-[1400px] px-8 py-16 lg:py-20">
+      <div className="relative z-10 mx-auto max-w-[1400px] px-8 py-8 lg:py-12">
         {/* 3-column layout */}
-        <div className="grid items-start gap-10 lg:grid-cols-[38%_1fr_220px]">
+        <div className="grid items-stretch gap-10 lg:grid-cols-[38%_1fr_300px]">
 
-          {/* ── Col 1: image mosaic ──────────────────────────────────────────── */}
-          <div className="grid grid-cols-2 gap-4" style={{ height: 560 }}>
-            <div className="flex h-full flex-col gap-4">
-              <div className="relative flex-[3] overflow-hidden rounded-2xl">
-                <Image src="/why/chauffeur.png" alt="Professional chauffeur" fill className="object-cover object-top" sizes="18vw" />
+          {/* ── Col 1: image mosaic with parallax + hover ────────────────────── */}
+          <motion.div
+            className="grid grid-cols-2 gap-4"
+            initial={{ opacity: 0, x: -40 }}
+            animate={sectionInView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.85, ease }}
+          >
+            <div className="grid h-full gap-4" style={{ gridTemplateRows: '3fr 2fr' }}>
+              <div className="relative overflow-hidden rounded-2xl">
+                <motion.div
+                  className="absolute inset-0"
+                  initial={{ scale: 1.12 }}
+                  whileHover={{ scale: 1.18 }}
+                  style={{ y: img1Y }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <Image src="/why/chauffeur.png" alt="Professional chauffeur" fill className="object-cover object-top" sizes="18vw" />
+                </motion.div>
               </div>
-              <div className="relative flex-[2] overflow-hidden rounded-2xl">
-                <Image src="/why/coastal-car.png" alt="Luxury fleet vehicle" fill className="object-cover object-center" sizes="18vw" />
+              <div className="relative overflow-hidden rounded-2xl">
+                <motion.div
+                  className="absolute inset-0"
+                  initial={{ scale: 1.12 }}
+                  whileHover={{ scale: 1.18 }}
+                  style={{ y: img2Y }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <Image src="/why/coastal-car.png" alt="Luxury fleet vehicle" fill className="object-cover object-center" sizes="18vw" />
+                </motion.div>
               </div>
             </div>
-            <div className="flex h-full flex-col gap-4">
-              <div className="relative flex-[2] overflow-hidden rounded-2xl">
-                <Image src="/why/interior.png" alt="Luxury car interior" fill className="object-cover object-center" sizes="18vw" />
+            <div className="grid h-full gap-4" style={{ gridTemplateRows: '2fr 3fr' }}>
+              <div className="relative overflow-hidden rounded-2xl">
+                <motion.div
+                  className="absolute inset-0"
+                  initial={{ scale: 1.12 }}
+                  whileHover={{ scale: 1.18 }}
+                  style={{ y: img3Y }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <Image src="/why/interior.png" alt="Luxury car interior" fill className="object-cover object-center" sizes="18vw" />
+                </motion.div>
               </div>
-              <div className="relative flex-[3] overflow-hidden rounded-2xl">
-                <Image src="/why/door.png" alt="Chauffeur opening door" fill className="object-cover object-center" sizes="18vw" />
+              <div className="relative overflow-hidden rounded-2xl">
+                <motion.div
+                  className="absolute inset-0"
+                  initial={{ scale: 1.12 }}
+                  whileHover={{ scale: 1.18 }}
+                  style={{ y: img4Y }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <Image src="/why/door.png" alt="Chauffeur opening door" fill className="object-cover object-center" sizes="18vw" />
+                </motion.div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* ── Col 2: text + stats ──────────────────────────────────────────── */}
-          <div className="flex flex-col gap-8 py-4">
+          <motion.div
+            className="flex flex-col gap-8 py-4"
+            initial={{ opacity: 0, y: 32 }}
+            animate={sectionInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.12, ease }}
+          >
             <HeroBadge text="Why Travel With UTS" />
             <h2 className="text-4xl font-bold leading-tight text-white lg:text-5xl">
               The Difference Is in Every Detail.
@@ -84,55 +169,52 @@ export function WhySection() {
               </button>
             </div>
             <div className="flex items-center gap-12">
-              <StatCircle number="120" label="Vehicles" />
+              <StatCircle value={120} label="Vehicles" />
               <div className="h-16 w-px" style={{ background: 'rgba(255,255,255,0.20)' }} />
-              <StatCircle number="25" label="Awwards" />
+              <StatCircle value={25} label="Awards" />
             </div>
-          </div>
+          </motion.div>
 
-          {/* ── Col 3: car drops in, RIDES text trails behind (above) it ────── */}
-          <div
-            ref={colRef}
-            className="relative overflow-hidden"
-            style={{ height: 560 }}
-          >
-            {/* RIDES + car fall as one unit — RIDES trails above the car */}
+          {/* ── Col 3: car + RIDES ── */}
+          <div ref={colRef} className="relative">
+            <div
+              aria-hidden
+              className="pointer-events-none select-none absolute inset-x-0 top-0 bottom-0 overflow-hidden"
+            >
+              <div className="rides-ticker-inner">
+                {[0, 1].map((i) => (
+                  <div key={i} style={{ height: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <span
+                      style={{
+                        fontSize: 100,
+                        fontWeight: 900,
+                        lineHeight: 1,
+                        color: 'white',
+                        display: 'block',
+                        whiteSpace: 'nowrap',
+                        transform: 'rotate(-90deg)',
+                      }}
+                    >
+                      RIDES
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             <motion.div
-              className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center"
-              style={{ bottom: 16 }}
-              initial={{ y: -900 }}
+              className="absolute right-[-30px]"
+              style={{ bottom: 0 }}
+              initial={{ y: -1000 }}
               animate={inView ? { y: 0 } : undefined}
               transition={{ duration: 1.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* RIDES — normal word in a sized container so it stays above car */}
-              <div
-                aria-hidden
-                className="pointer-events-none select-none flex items-center justify-center"
-                style={{ height: 540, width: 220 }}
-              >
-                <span
-                  className="font-black text-white whitespace-nowrap"
-                  style={{
-                    fontSize: 160,
-                    lineHeight: 1,
-                    letterSpacing: 0,
-                    opacity: 1,
-                    transform: 'rotate(-90deg)',
-                    display: 'block',
-                  }}
-                >
-                  RIDES
-                </span>
-              </div>
-
-              {/* Car — 240px, rotated 268deg facing downward */}
               <Image
                 src="/why/car-top.png"
                 alt=""
-                width={240}
-                height={408}
-                className="h-auto object-contain"
-                style={{ width: 240, transform: 'rotate(268deg)' }}
+                width={500}
+                height={333}
+                style={{ width: 500, height: 'auto', transform: 'rotate(268deg)' }}
               />
             </motion.div>
           </div>

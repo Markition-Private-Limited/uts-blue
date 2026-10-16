@@ -2,7 +2,18 @@
 
 export function HeroBookingBar() {
   return (
-    <div className="w-full rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 px-6 py-5">
+    <div
+      className="w-full rounded-2xl border border-white/10 px-6 py-5"
+      style={{
+        backgroundColor: "rgba(0, 0, 0, 0.2)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
+        backgroundImage:
+          "radial-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0) 90%), radial-gradient(circle at 80% 200%, rgba(255,255,255,0.25), rgba(255,255,255,0) 80%), linear-gradient(rgba(15,19,25,0.2), rgba(15,19,25,0.2))",
+        boxShadow:
+          "0 2px 8px 0 rgba(6,10,13,0.12), inset 4px 4px 8px rgba(0,0,0,0.06)",
+      }}
+    >
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-6">
         {/* Label */}
         <div className="shrink-0">
