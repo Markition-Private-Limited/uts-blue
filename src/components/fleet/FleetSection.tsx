@@ -107,20 +107,20 @@ function FleetCard({ car, i }: { car: (typeof FLEET)[number]; i: number }) {
 
       <div className="flex items-center gap-2 px-5 py-4">
         <button
-          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg py-2 text-[12px] font-semibold text-white transition-opacity hover:opacity-90"
+          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg py-2 text-[12px] font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
           style={{ background: '#1648D8' }}
         >
           <Phone size={12} />
           Call Now
         </button>
         <button
-          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg py-2 text-[12px] font-semibold text-white transition-opacity hover:opacity-90"
+          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg py-2 text-[12px] font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
           style={{ background: '#22c55e' }}
         >
           <CalendarCheck size={12} />
           Book Now
         </button>
-        <button className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-blue-200 py-2 text-[12px] font-semibold text-blue-700 transition-colors hover:bg-blue-50">
+        <button className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-blue-200 py-2 text-[12px] font-semibold text-blue-700 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100 hover:bg-blue-50">
           <MessageSquare size={12} />
           Enquiry
         </button>
@@ -197,7 +197,7 @@ export function FleetSection() {
         <button
           onClick={() => navigate(Math.max(0, page - 1))}
           disabled={page === 0}
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-blue-200 text-blue-600 transition-all hover:bg-blue-50 disabled:opacity-30 disabled:cursor-not-allowed"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-blue-200 text-blue-600 transition-all duration-300 hover:scale-110 hover:bg-blue-50 hover:shadow-md active:scale-100 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none"
         >
           <ChevronLeft size={16} />
         </button>
@@ -207,7 +207,7 @@ export function FleetSection() {
             key={i}
             onClick={() => navigate(i)}
             aria-label={`Go to page ${i + 1}`}
-            className="rounded-full transition-all duration-300"
+            className="rounded-full transition-all duration-300 hover:scale-125"
             style={{
               width: page === i ? 20 : 8,
               height: 8,
@@ -219,7 +219,7 @@ export function FleetSection() {
         <button
           onClick={() => navigate(Math.min(PAGE_COUNT - 1, page + 1))}
           disabled={page === PAGE_COUNT - 1}
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-blue-200 text-blue-600 transition-all hover:bg-blue-50 disabled:opacity-30 disabled:cursor-not-allowed"
+          className="flex h-8 w-8 items-center justify-center rounded-full border border-blue-200 text-blue-600 transition-all duration-300 hover:scale-110 hover:bg-blue-50 hover:shadow-md active:scale-100 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none"
         >
           <ChevronRight size={16} />
         </button>

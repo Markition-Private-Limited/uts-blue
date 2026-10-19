@@ -40,7 +40,7 @@ export function Navbar() {
             <li key={link.label}>
               <Link
                 href={link.href}
-                className="text-sm text-white/80 transition-colors hover:text-white"
+                className="inline-block text-sm text-white/80 transition-all duration-300 hover:-translate-y-0.5 hover:text-white"
               >
                 {link.label}
               </Link>

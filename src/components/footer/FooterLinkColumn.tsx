@@ -17,7 +17,7 @@ export function FooterLinkColumn({ heading, links }: FooterLinkColumnProps) {
           <li key={link.label}>
             <Link
               href={link.href}
-              className="font-[family-name:var(--font-arimo)] text-[14px] leading-[100%] text-white/70 transition-colors hover:text-white"
+              className="inline-block font-[family-name:var(--font-arimo)] text-[14px] leading-[100%] text-white/70 transition-all duration-300 hover:translate-x-1 hover:text-white"
             >
               {link.label}
             </Link>

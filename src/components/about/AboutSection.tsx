@@ -12,7 +12,7 @@ export function AboutSection() {
   const inView = useInView(ref, { once: true, amount: 0.3 })
 
   return (
-    <section className="w-full overflow-hidden rounded-t-[56px] bg-white pt-12 pb-0">
+    <section className="relative z-30 -mt-10 w-full overflow-hidden rounded-t-[56px] bg-transparent pt-14 pb-0">
       {/* Text content */}
       <motion.div
         ref={ref}
@@ -21,7 +21,7 @@ export function AboutSection() {
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, ease }}
       >
-        <HeroBadge text="Executive Chauffeur Services" />
+        <HeroBadge text="Executive Chauffeur Services" variant="blue" />
 
         <h2 className="text-4xl font-bold leading-tight tracking-tight text-gray-900">
           More Than a Ride.

@@ -71,7 +71,7 @@ export function WhySection() {
       style={{ background: '#1E4FD9' }}
     >
 
-      <div className="relative z-10 mx-auto max-w-[1400px] px-8 py-8 lg:py-12">
+      <div className="relative z-10 px-8 py-12">
         {/* 3-column layout */}
         <div className="grid items-stretch gap-10 lg:grid-cols-[38%_1fr_300px]">
 
@@ -86,12 +86,12 @@ export function WhySection() {
               <div className="relative overflow-hidden rounded-2xl">
                 <motion.div
                   className="absolute inset-0"
-                  initial={{ scale: 1.12 }}
-                  whileHover={{ scale: 1.18 }}
-                  style={{ y: img1Y }}
+                  initial={{ scale: 1 }}
+                  whileHover={{ scale: 1.05 }}
+                  style={{ transformOrigin: 'top center' }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <Image src="/why/chauffeur.png" alt="Professional chauffeur" fill className="object-cover object-top" sizes="18vw" />
+                  <Image src="/why/chauffeur-v2.png" alt="Professional chauffeur" fill unoptimized className="object-cover object-top" />
                 </motion.div>
               </div>
               <div className="relative overflow-hidden rounded-2xl">
@@ -102,7 +102,7 @@ export function WhySection() {
                   style={{ y: img2Y }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <Image src="/why/coastal-car.png" alt="Luxury fleet vehicle" fill className="object-cover object-center" sizes="18vw" />
+                  <Image src="/why/coastal-car-v2.png" alt="Luxury fleet vehicle" fill unoptimized className="object-cover object-center" />
                 </motion.div>
               </div>
             </div>
@@ -115,7 +115,7 @@ export function WhySection() {
                   style={{ y: img3Y }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <Image src="/why/interior.png" alt="Luxury car interior" fill className="object-cover object-center" sizes="18vw" />
+                  <Image src="/why/interior-v2.png" alt="Luxury car interior" fill unoptimized className="object-cover object-center" />
                 </motion.div>
               </div>
               <div className="relative overflow-hidden rounded-2xl">
@@ -126,7 +126,7 @@ export function WhySection() {
                   style={{ y: img4Y }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <Image src="/why/door.png" alt="Chauffeur opening door" fill className="object-cover object-center" sizes="18vw" />
+                  <Image src="/why/door-v2.png" alt="Chauffeur opening door" fill unoptimized className="object-cover object-center" />
                 </motion.div>
               </div>
             </div>
@@ -151,7 +151,7 @@ export function WhySection() {
             </p>
             <div>
               <button
-                className="inline-flex items-center gap-3 rounded-full py-2 pl-2 pr-6 text-[14px] font-medium text-white transition-opacity hover:opacity-90"
+                className="inline-flex items-center gap-3 rounded-full py-2 pl-2 pr-6 text-[14px] font-medium text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
                 style={{
                   background: 'rgba(255,255,255,0.12)',
                   backdropFilter: 'blur(10px)',
@@ -179,7 +179,7 @@ export function WhySection() {
           <div ref={colRef} className="relative">
             <div
               aria-hidden
-              className="pointer-events-none select-none absolute inset-x-0 top-0 bottom-0 overflow-hidden"
+              className="pointer-events-none select-none absolute inset-x-0 top-0 bottom-0 translate-x-[10px] overflow-hidden"
             >
               <div className="rides-ticker-inner">
                 {[0, 1].map((i) => (

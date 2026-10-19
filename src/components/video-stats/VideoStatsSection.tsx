@@ -65,7 +65,7 @@ export function VideoStatsSection() {
           {/* Play button */}
           <button
             aria-label="Play video"
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full transition-transform hover:scale-110"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center rounded-full transition-all duration-300 hover:scale-110 hover:shadow-2xl active:scale-100"
             style={{
               width: 80,
               height: 80,

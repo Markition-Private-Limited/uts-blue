@@ -179,7 +179,7 @@ function ServiceCard({
               </p>
               <a
                 href={card.link}
-                className="inline-flex items-center gap-1.5 transition-opacity hover:opacity-80 underline underline-offset-2"
+                className="group inline-flex items-center gap-1.5 underline underline-offset-2 transition-all duration-300 hover:translate-x-1 hover:opacity-80"
                 style={{ fontSize: 'clamp(13px, 1.4vw, 15px)', color: '#93c5fd' }}
               >
                 Explore Service <ArrowRight size={13} color="#93c5fd" />

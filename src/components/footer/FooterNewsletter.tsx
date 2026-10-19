@@ -38,7 +38,7 @@ export function FooterNewsletter({
         <button
           type="submit"
           aria-label="Subscribe"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white transition-colors hover:bg-blue-500"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-600 text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-110 hover:bg-blue-500 hover:shadow-lg hover:shadow-blue-600/40 active:scale-100"
         >
           <SendIcon className="h-4 w-4 -translate-x-px translate-y-px" />
         </button>

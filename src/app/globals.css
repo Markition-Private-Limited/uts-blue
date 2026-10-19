@@ -37,14 +37,14 @@ body::-webkit-scrollbar {
 /*
   WhySection RIDES vertical ticker:
   Inner wrapper is 200% tall (two copies stacked).
-  -50% → 0% means content scrolls downward: second copy exits bottom, first enters from top.
+  0% → -50% means content scrolls upward: text enters from the bottom and exits at the top.
 */
-@keyframes rides-vertical-down {
-  from { transform: translateY(-50%); }
-  to   { transform: translateY(0); }
+@keyframes rides-vertical-up {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-50%); }
 }
 
 .rides-ticker-inner {
   height: 200%;
-  animation: rides-vertical-down 3.8s linear infinite;
+  animation: rides-vertical-up 3.8s linear infinite;
 }

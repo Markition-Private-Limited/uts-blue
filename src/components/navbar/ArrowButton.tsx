@@ -22,7 +22,7 @@ export function ArrowButton({ label, href, variant, className = "" }: ArrowButto
   return (
     <Link
       href={href}
-      className={`inline-flex items-center gap-3 rounded-full py-1 pl-1 pr-5 text-sm font-semibold text-white transition-opacity hover:opacity-90 ${className}`}
+      className={`inline-flex items-center gap-3 rounded-full py-1 pl-1 pr-5 text-sm font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100 ${className}`}
       style={variant === "blue" ? blueStyle : outlineStyle}
     >
       {/* Solid white circle — flush to left edge (pl-1 gives ~4px gap) */}

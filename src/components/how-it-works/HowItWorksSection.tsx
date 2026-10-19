@@ -95,7 +95,7 @@ export function HowItWorksSection() {
           transition={{ duration: 0.7, delay: 0.24, ease }}
         >
           <button
-            className="inline-flex items-center gap-3 rounded-full py-2 pl-2 pr-6 text-[14px] font-semibold text-white transition-opacity hover:opacity-90"
+            className="inline-flex items-center gap-3 rounded-full py-2 pl-2 pr-6 text-[14px] font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
             style={{
               background: 'rgba(255,255,255,0.15)',
               backdropFilter: 'blur(10px)',

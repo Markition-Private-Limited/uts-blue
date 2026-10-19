@@ -13,9 +13,7 @@ export function HeroSection() {
   const { badge, headline, description, cta } = heroContent
 
   return (
-    <section
-      className="relative flex min-h-screen flex-col overflow-hidden rounded-b-[56px] bg-white"
-    >
+    <section className="relative flex min-h-screen flex-col overflow-hidden bg-white">
       {/* Background image */}
       <motion.div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -38,7 +36,7 @@ export function HeroSection() {
       />
 
       {/* Content + Booking bar as one centered unit */}
-      <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-10 px-6 pt-40 pb-14 lg:px-8">
+      <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-10 px-6 pt-40 pb-[192px] lg:px-8">
         <div className="flex w-full max-w-4xl flex-col items-center gap-4">
           {badge && (
             <motion.div

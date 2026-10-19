@@ -36,7 +36,7 @@ export function HeroBookingBar() {
         {/* Send button */}
         <button
           type="button"
-          className="shrink-0 rounded-xl px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+          className="shrink-0 rounded-xl px-6 py-3 text-sm font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
           style={{
             background:
               "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 51.44%, rgba(255,255,255,0) 100%), linear-gradient(0deg, #1648D8, #1648D8)",
