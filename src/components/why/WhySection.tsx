@@ -67,7 +67,7 @@ export function WhySection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden rounded-3xl mx-6 my-6 lg:mx-16 lg:my-10"
+      className="relative overflow-hidden rounded-3xl mx-6 mt-8 mb-4 sm:mt-10 sm:mb-6 lg:mx-16"
       style={{ background: '#1E4FD9' }}
     >
 

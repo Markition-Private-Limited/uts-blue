@@ -22,9 +22,9 @@ export function FooterSection() {
   } = footerContent;
 
   return (
-    <footer className="bg-white px-4 py-6 sm:px-6 lg:px-8">
+    <footer className="bg-white px-4 py-6 sm:px-6">
       <div
-        className="relative mx-auto max-w-7xl overflow-hidden rounded-[32px] bg-[radial-gradient(ellipse_at_top,_#1a1a1a,_#000000_70%)] bg-cover bg-center px-8 py-14 sm:px-12 lg:px-16"
+        className="relative mx-auto overflow-hidden rounded-[32px] bg-[radial-gradient(ellipse_at_top,_#1a1a1a,_#000000_70%)] bg-cover bg-center px-8 py-10 sm:px-12 lg:px-16"
         style={{
           backgroundImage:
             "url(/footer-chevron.png), radial-gradient(ellipse at top right, #2a2a2a, #000000 65%)",

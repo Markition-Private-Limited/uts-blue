@@ -44,7 +44,7 @@ export function VideoStatsSection() {
   const inView = useInView(ref, { once: true, amount: 0.2 })
 
   return (
-    <section ref={ref} className="w-full bg-white px-4 py-10 lg:px-10">
+    <section ref={ref} className="w-full bg-white px-4 pt-16 pb-6 sm:pt-20 sm:pb-8 lg:px-10">
       <motion.div
         className="mx-auto max-w-7xl"
         initial={{ opacity: 0, y: 32 }}

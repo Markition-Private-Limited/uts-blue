@@ -1,9 +1,19 @@
 interface HeroBadgeProps {
   text: string;
-  variant?: "light" | "blue";
+  variant?: "light" | "blue" | "dark";
 }
 
 export function HeroBadge({ text, variant = "light" }: HeroBadgeProps) {
+  if (variant === "dark") {
+    return (
+      <div className="flex items-center justify-center gap-3">
+        <span className="h-px w-8 bg-gray-300" />
+        <span className="text-xs font-medium tracking-widest text-gray-500">{text}</span>
+        <span className="h-px w-8 bg-gray-300" />
+      </div>
+    );
+  }
+
   if (variant === "blue") {
     return (
       <div className="flex items-center justify-center gap-3">

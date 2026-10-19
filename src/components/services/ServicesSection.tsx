@@ -123,13 +123,6 @@ function ServiceCard({
             />
           </div>
 
-          {/* Card number — top center */}
-          <span
-            className="absolute top-5 left-1/2 -translate-x-1/2 text-white/50 text-sm tracking-widest select-none"
-            style={{ fontVariantNumeric: 'tabular-nums' }}
-          >
-            {card.num}
-          </span>
 
           {/* Service icon — top right in glass circle */}
           <div
@@ -165,25 +158,35 @@ function ServiceCard({
                 WebkitBackdropFilter: 'blur(6px)',
               }}
             >
-              <h3
-                className="text-white font-semibold leading-tight mb-2"
-                style={{ fontSize: 'clamp(18px, 2.8vw, 26px)' }}
-              >
-                {card.title}
-              </h3>
-              <p
-                className="text-white/60 leading-relaxed mb-3"
-                style={{ fontSize: 'clamp(13px, 1.5vw, 15px)' }}
-              >
-                {card.desc}
-              </p>
-              <a
-                href={card.link}
-                className="group inline-flex items-center gap-1.5 underline underline-offset-2 transition-all duration-300 hover:translate-x-1 hover:opacity-80"
-                style={{ fontSize: 'clamp(13px, 1.4vw, 15px)', color: '#93c5fd' }}
-              >
-                Explore Service <ArrowRight size={13} color="#93c5fd" />
-              </a>
+              <div className="flex items-center gap-4">
+                <div className="flex-1">
+                  <h3
+                    className="text-white font-semibold leading-tight mb-2"
+                    style={{ fontSize: 'clamp(18px, 2.8vw, 26px)' }}
+                  >
+                    {card.title}
+                  </h3>
+                  <p
+                    className="text-white/60 leading-relaxed mb-3"
+                    style={{ fontSize: 'clamp(13px, 1.5vw, 15px)' }}
+                  >
+                    {card.desc}
+                  </p>
+                  <a
+                    href={card.link}
+                    className="group inline-flex items-center gap-1.5 underline underline-offset-2 transition-all duration-300 hover:translate-x-1 hover:opacity-80"
+                    style={{ fontSize: 'clamp(13px, 1.4vw, 15px)', color: '#93c5fd' }}
+                  >
+                    Explore Service <ArrowRight size={13} color="#93c5fd" />
+                  </a>
+                </div>
+                <span
+                  className="text-white/40 select-none shrink-0"
+                  style={{ fontSize: 'clamp(64px, 8vw, 100px)', fontWeight: 800, lineHeight: 1 }}
+                >
+                  {card.num}
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -209,40 +212,6 @@ export function ServicesSection() {
 
   return (
     <section className="w-full bg-white">
-      {/* Header text */}
-      <motion.div
-        ref={headerRef}
-        initial={{ opacity: 0, y: 36 }}
-        animate={headerInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.8, ease }}
-        className="px-4 sm:px-8 pt-0 sm:pt-2 pb-6 sm:pb-8 text-center"
-      >
-        <HeroBadge text="Our Services" />
-
-        <h2
-          className="text-gray-900 leading-tight mt-3 mb-3"
-          style={{
-            fontWeight: 300,
-            fontSize: 'clamp(26px, 5vw, 46px)',
-          }}
-        >
-          One Destination Or Many.
-          <br />
-          <span style={{ fontWeight: 700, fontStyle: 'italic', color: '#1648D8' }}>
-            We&apos;ve Got The Ride.
-          </span>
-        </h2>
-
-        <p
-          className="text-gray-400 leading-relaxed mx-auto px-6 sm:px-16 lg:px-28"
-          style={{ fontSize: 'clamp(13px, 1.5vw, 15px)' }}
-        >
-          UTS Blue delivers premium chauffeur transportation for people who value comfort,
-          reliability, and exceptional service. From airport transfers to corporate journeys,
-          every ride is designed to make growing more effortless.
-        </p>
-      </motion.div>
-
       {/* Stacking cards scroll container */}
       <div
         ref={containerRef}

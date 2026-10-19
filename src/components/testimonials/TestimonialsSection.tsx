@@ -55,7 +55,7 @@ export function TestimonialsSection() {
   const headerInView = useInView(headerRef, { once: true, amount: 0.4 })
 
   return (
-    <section className="w-full bg-white py-16 sm:py-24">
+    <section className="w-full bg-white pt-8 pb-16 sm:pt-10 sm:pb-20">
       {/* Header */}
       <motion.div
         ref={headerRef}
@@ -64,15 +64,10 @@ export function TestimonialsSection() {
         transition={{ duration: 0.8, ease }}
         className="mx-auto max-w-2xl px-6 text-center mb-12"
       >
-        <HeroBadge text="Our Happy Clients" />
-        <h2
-          className="mt-5 text-gray-900 leading-tight"
-          style={{ fontWeight: 300, fontSize: 'clamp(26px, 5vw, 48px)' }}
-        >
+        <HeroBadge text="Our Clients, Our Priority" variant="blue" />
+        <h2 className="mt-5 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
           Real Journeys.{' '}
-          <span style={{ fontWeight: 700, fontStyle: 'italic', color: '#1648D8' }}>
-            Lasting Impressions.
-          </span>
+          <span style={{ color: '#1648D8', fontStyle: 'italic' }}>Lasting Impressions.</span>
         </h2>
         <p className="mt-4 text-sm leading-relaxed text-gray-500">
           The best journeys are remembered for how they make you feel. We aim to deliver a

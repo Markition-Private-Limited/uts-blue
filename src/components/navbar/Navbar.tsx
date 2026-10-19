@@ -16,8 +16,8 @@ export function Navbar() {
       className="absolute inset-x-0 top-0 z-50 px-8 py-4"
       style={{
         background: "#1E4FD926",
-        backdropFilter: "blur(16px)",
-        WebkitBackdropFilter: "blur(16px)",
+        backdropFilter: "blur(8px)",
+        WebkitBackdropFilter: "blur(8px)",
         borderBottom: "1px solid rgba(255,255,255,0.10)",
       }}
     >

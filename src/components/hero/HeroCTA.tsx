@@ -14,7 +14,6 @@ export function HeroCTA({ buttons }: HeroCTAProps) {
           label={btn.label}
           href={btn.href}
           variant={btn.variant === "primary" ? "blue" : "outline"}
-          className="px-6 py-3 text-sm"
         />
       ))}
     </div>

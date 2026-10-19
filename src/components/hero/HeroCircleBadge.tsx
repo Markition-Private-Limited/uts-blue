@@ -1,6 +1,6 @@
 export function HeroCircleBadge() {
-  const text = "THE UTS EXPERIENCE • THE UTS EXPERIENCE •";
-  const radius = 40;
+  const text = "THE UTS EXPERIENCE •";
+  const radius = 34;
   const circumference = 2 * Math.PI * radius;
 
   return (
@@ -17,12 +17,11 @@ export function HeroCircleBadge() {
             d={`M 50,50 m -${radius},0 a ${radius},${radius} 0 1,1 ${radius * 2},0 a ${radius},${radius} 0 1,1 -${radius * 2},0`}
           />
         </defs>
-        <text className="fill-gray-900 text-[7px] font-semibold uppercase tracking-widest" style={{ fontSize: "7px" }}>
+        <text className="fill-gray-900 font-semibold uppercase" style={{ fontSize: "7px" }}>
           <textPath
             href="#circle-text-path"
             startOffset="0%"
-            textLength={circumference}
-            lengthAdjust="spacingAndGlyphs"
+            letterSpacing="9"
           >
             {text}
           </textPath>

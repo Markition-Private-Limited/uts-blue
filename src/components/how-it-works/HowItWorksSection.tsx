@@ -95,7 +95,7 @@ export function HowItWorksSection() {
           transition={{ duration: 0.7, delay: 0.24, ease }}
         >
           <button
-            className="inline-flex items-center gap-3 rounded-full py-2 pl-2 pr-6 text-[14px] font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
+            className="inline-flex items-center gap-3 rounded-full py-1 pl-1 pr-5 text-sm font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
             style={{
               background: 'rgba(255,255,255,0.15)',
               backdropFilter: 'blur(10px)',
@@ -103,19 +103,22 @@ export function HowItWorksSection() {
               border: '1px solid rgba(255,255,255,0.30)',
             }}
           >
-            <span
-              className="flex h-9 w-9 items-center justify-center rounded-full"
-              style={{ background: 'rgba(255,255,255,0.22)' }}
-            >
-              <ArrowRight size={16} color="white" />
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white">
+              <ArrowRight size={14} color="#1648D8" />
             </span>
             Explore Our Fleet
           </button>
         </motion.div>
 
-        {/* Step cards */}
+        {/* Step cards — outer frosted glass shell, inner individual white cards */}
         <motion.div
-          className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-4"
+          className="mt-14 flex gap-3 rounded-2xl p-3"
+          style={{
+            background: 'rgba(255,255,255,0.18)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: '1px solid rgba(255,255,255,0.40)',
+          }}
           initial={{ opacity: 0, y: 28 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.85, delay: 0.32, ease }}
@@ -123,23 +126,19 @@ export function HowItWorksSection() {
           {STEPS.map((step) => (
             <div
               key={step.num}
-              className="relative overflow-hidden rounded-2xl p-5 text-left"
-              style={{
-                background: 'rgba(255,255,255,0.92)',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)',
-              }}
+              className="relative flex flex-1 flex-col items-center justify-center overflow-hidden rounded-xl px-5 py-8 text-center"
+              style={{ background: '#ffffff' }}
             >
               {/* Ghost number */}
               <span
-                className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 select-none font-black leading-none text-gray-200"
-                style={{ fontSize: 72 }}
+                className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 select-none font-black leading-none text-gray-200"
+                style={{ fontSize: 80 }}
                 aria-hidden
               >
                 {step.num}
               </span>
 
-              <p className="relative text-[17px] font-bold text-gray-900">
+              <p className="relative text-[16px] font-bold text-gray-900">
                 {step.title}
               </p>
               <p className="relative mt-2 text-[13px] leading-relaxed text-gray-500">

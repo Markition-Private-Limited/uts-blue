@@ -38,7 +38,7 @@ function ArrowIcon({ color }: { color: string }) {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
       <path
-        d="M3 11L11 3M11 3H5M11 3V9"
+        d="M2 7H12M8 3L12 7L8 11"
         stroke={color}
         strokeWidth="1.75"
         strokeLinecap="round"

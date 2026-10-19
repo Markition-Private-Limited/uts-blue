@@ -12,7 +12,7 @@ const FLEET = [
     id: 1,
     name: 'BMW 7 SERIES 2024',
     desc: 'Mercedes-Benz E-Class and BMW 5 Series vehicles, ideal for refined business travel.',
-    img: '/fleet/car-1.png',
+    img: '/fleet/bmw-7-series.png',
     class: 'Business Class',
     passengers: 4,
   },
@@ -20,7 +20,7 @@ const FLEET = [
     id: 2,
     name: 'MERCEDES S-CLASS',
     desc: 'The pinnacle of executive luxury — spacious, whisper-quiet, and impeccably appointed.',
-    img: '/fleet/car-2.png',
+    img: '/fleet/mercedes-s-class.png',
     class: 'First Class',
     passengers: 4,
   },
@@ -28,7 +28,7 @@ const FLEET = [
     id: 3,
     name: 'RANGE ROVER VOGUE',
     desc: 'Commanding presence with supreme comfort, perfect for VIP transfers and special occasions.',
-    img: '/fleet/car-3.png',
+    img: '/fleet/range-rover-suv.png',
     class: 'SUV Class',
     passengers: 5,
   },
@@ -36,7 +36,7 @@ const FLEET = [
     id: 4,
     name: 'BMW 7 SERIES LWB',
     desc: 'Long-wheelbase executive saloon with extended rear cabin, perfect for VIP delegation travel.',
-    img: '/fleet/car-1.png',
+    img: '/fleet/bmw-7-series.png',
     class: 'Business Class',
     passengers: 4,
   },
@@ -44,7 +44,7 @@ const FLEET = [
     id: 5,
     name: 'MERCEDES S 580',
     desc: 'The flagship S-Class with AMG styling — first-class airborne comfort on every road.',
-    img: '/fleet/car-2.png',
+    img: '/fleet/mercedes-s-class.png',
     class: 'First Class',
     passengers: 4,
   },
@@ -52,7 +52,7 @@ const FLEET = [
     id: 6,
     name: 'RANGE ROVER AUTOBIOGRAPHY',
     desc: 'The ultimate Range Rover — hand-crafted luxury, maximum presence, seats up to 6 passengers.',
-    img: '/fleet/car-3.png',
+    img: '/fleet/range-rover-suv.png',
     class: 'SUV Class',
     passengers: 6,
   },
@@ -82,14 +82,16 @@ function FleetCard({ car, i }: { car: (typeof FLEET)[number]; i: number }) {
         <p className="text-[13px] text-gray-500 leading-snug">{car.desc}</p>
       </div>
 
-      <div className="relative w-full h-48 px-4">
-        <Image
-          src={car.img}
-          alt={car.name}
-          fill
-          className="object-contain object-center drop-shadow-lg"
-          sizes="(max-width: 1280px) 33vw, 420px"
-        />
+      <div className="px-5">
+        <div className="relative w-full h-48">
+          <Image
+            src={car.img}
+            alt={car.name}
+            fill
+            className="object-cover object-center rounded-lg"
+            sizes="(max-width: 1280px) 33vw, 420px"
+          />
+        </div>
       </div>
 
       <div className="flex items-center gap-5 px-5 pt-3 pb-3">
@@ -152,7 +154,7 @@ export function FleetSection() {
   }
 
   return (
-    <section className="w-full bg-white pt-6 pb-16 sm:pt-8 sm:pb-24">
+    <section className="w-full bg-white pt-8 pb-0 sm:pt-10 sm:pb-0">
       {/* Header */}
       <motion.div
         ref={headerRef}
@@ -161,10 +163,10 @@ export function FleetSection() {
         transition={{ duration: 0.75, ease }}
         className="mx-auto max-w-2xl px-6 text-center mb-12"
       >
-        <HeroBadge text="Our Premium Fleet" />
+        <HeroBadge text="Our Premium Fleet" variant="blue" />
         <h2 className="mt-5 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
           Luxury Chauffeur Cars for{' '}
-          <span style={{ color: '#1648D8' }}>Every Journey</span>
+          <span style={{ color: '#1648D8', fontStyle: 'italic' }}>Every Journey</span>
         </h2>
         <p className="mt-4 text-sm leading-relaxed text-gray-500">
           Discover a carefully selected range of chauffeur vehicles for business travel, airport
