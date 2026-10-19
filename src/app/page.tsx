@@ -9,6 +9,7 @@ import { ChauffeurPromoSection } from "@/components/chauffeur-promo";
 import { TestimonialsSection } from "@/components/testimonials/TestimonialsSection";
 import { HowItWorksSection } from "@/components/how-it-works/HowItWorksSection";
 import { VideoStatsSection } from "@/components/video-stats/VideoStatsSection";
+import { FadeInSection } from "@/components/ui/FadeInSection";
 
 export default function Home() {
   return (
@@ -46,14 +47,14 @@ export default function Home() {
       </div>
 
       <main>
-        <AboutSection />
-        <ServicesSection />
-        <HowItWorksSection />
-        <VideoStatsSection />
-        <FleetSection />
-        <WhySection />
-        <TestimonialsSection />
-        <ChauffeurPromoSection />
+        <FadeInSection className="relative z-30"><AboutSection /></FadeInSection>
+        <FadeInSection><ServicesSection /></FadeInSection>
+        <FadeInSection><HowItWorksSection /></FadeInSection>
+        <FadeInSection><VideoStatsSection /></FadeInSection>
+        <FadeInSection><FleetSection /></FadeInSection>
+        <FadeInSection><WhySection /></FadeInSection>
+        <FadeInSection><TestimonialsSection /></FadeInSection>
+        <FadeInSection><ChauffeurPromoSection /></FadeInSection>
       </main>
     </>
   );
