@@ -54,7 +54,7 @@ export default function Home() {
         <FadeInSection><FleetSection /></FadeInSection>
         <FadeInSection><WhySection /></FadeInSection>
         <FadeInSection><TestimonialsSection /></FadeInSection>
-        <FadeInSection><ChauffeurPromoSection /></FadeInSection>
+        <FadeInSection className="mb-12"><ChauffeurPromoSection /></FadeInSection>
       </main>
     </>
   );
