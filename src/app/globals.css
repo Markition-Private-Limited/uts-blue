@@ -47,3 +47,49 @@ body::-webkit-scrollbar {
   height: 200%;
   animation: rides-vertical-up 3.8s linear infinite;
 }
+
+/* ── Booking page (dark navy, UTS blue accents) ─────────────────────────── */
+.uts-glass-panel {
+  background: linear-gradient(135deg, rgba(14, 28, 84, 0.7) 0%, rgba(6, 12, 38, 0.9) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(120, 150, 255, 0.2);
+  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.uts-input-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(120, 150, 255, 0.22);
+  transition: all 0.25s ease;
+}
+.uts-input-box:focus-within {
+  background: rgba(30, 79, 217, 0.14);
+  border-color: #1e4fd9;
+  box-shadow: 0 0 0 3px rgba(30, 79, 217, 0.25);
+}
+.uts-tab-active {
+  background: #1648d8;
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(22, 72, 216, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.uts-book input[type="date"]::-webkit-calendar-picker-indicator,
+.uts-book input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.8);
+  cursor: pointer;
+}
+.uts-book input:-webkit-autofill {
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0 1000px #0b1330 inset;
+}
+
+/* Booking form card — a clearly bounded, separate card on the dark backdrop */
+.uts-card {
+  background: linear-gradient(160deg, #0d1a4d 0%, #070f2e 100%);
+  border: 1.5px solid rgba(120, 150, 255, 0.4);
+  box-shadow:
+    0 0 0 6px rgba(30, 79, 217, 0.1),
+    0 30px 80px -20px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* rebuild */

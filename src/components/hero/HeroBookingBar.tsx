@@ -1,8 +1,38 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { DRAFT_KEY, tomorrowISO, type BookingDraft } from "@/lib/booking";
+
 export function HeroBookingBar() {
+  const router = useRouter();
+  const [draft, setDraft] = useState<BookingDraft>({
+    name: "",
+    phone: "",
+    pickup: "",
+    date: "",
+  });
+
+  // Earliest selectable date — read after mount so no Date is evaluated during render.
+  const [minDate, setMinDate] = useState<string | undefined>(undefined);
+  useEffect(() => setMinDate(tomorrowISO()), []);
+
+  const set = (patch: Partial<BookingDraft>) => setDraft((d) => ({ ...d, ...patch }));
+
+  // Hand the details to /book (which continues from the Vehicle step).
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ ...draft, date: draft.date || tomorrowISO() }));
+    } catch {
+      /* storage unavailable — the booking page just starts at step 1 */
+    }
+    router.push("/book");
+  };
+
   return (
-    <div
+    <form
+      onSubmit={handleSubmit}
       className="w-full rounded-2xl border border-white/10 px-6 py-5"
       style={{
         backgroundColor: "rgba(0, 0, 0, 0.2)",
@@ -27,24 +57,51 @@ export function HeroBookingBar() {
 
         {/* Fields */}
         <div className="flex flex-1 flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
-          <BookingField label="Full Name" placeholder="Enter Full Name" type="text" />
-          <BookingField label="Mobile Number" placeholder="Enter Phone no." type="tel" />
-          <BookingField label="Pickup Location" placeholder="Enter Location" type="text" />
-          <BookingField label="Pickup Date" placeholder="dd/mm/yyyy" type="text" />
+          <BookingField
+            label="Full Name"
+            placeholder="Enter Full Name"
+            type="text"
+            value={draft.name}
+            onChange={(name) => set({ name })}
+          />
+          <BookingField
+            label="Mobile Number"
+            placeholder="Enter Phone no."
+            type="tel"
+            value={draft.phone}
+            onChange={(phone) => set({ phone })}
+          />
+          <BookingField
+            label="Pickup Location"
+            placeholder="Enter Location"
+            type="text"
+            required
+            value={draft.pickup}
+            onChange={(pickup) => set({ pickup })}
+          />
+          <BookingField
+            label="Pickup Date"
+            placeholder="dd/mm/yyyy"
+            type="date"
+            required
+            min={minDate}
+            value={draft.date}
+            onChange={(date) => set({ date })}
+          />
         </div>
 
-        {/* Send button */}
+        {/* Find Your Ride button */}
         <button
-          type="button"
+          type="submit"
           className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
           style={{
             background: "#194BD9",
           }}
         >
-          Send
+          Find Your Ride
         </button>
       </div>
-    </div>
+    </form>
   );
 }
 
@@ -52,10 +109,18 @@ function BookingField({
   label,
   placeholder,
   type,
+  value,
+  onChange,
+  required,
+  min,
 }: {
   label: string;
   placeholder: string;
   type: string;
+  value: string;
+  onChange: (v: string) => void;
+  required?: boolean;
+  min?: string;
 }) {
   return (
     <div className="flex flex-1 flex-col gap-1 min-w-0">
@@ -63,7 +128,11 @@ function BookingField({
       <input
         type={type}
         placeholder={placeholder}
-        className="w-full bg-transparent text-sm text-white placeholder-white/40 outline-none border-b border-white/20 pb-1 focus:border-white/60 transition-colors"
+        required={required}
+        min={min}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full bg-transparent text-sm text-white placeholder-white/40 outline-none border-b border-white/20 pb-1 focus:border-white/60 transition-colors [color-scheme:dark]"
       />
     </div>
   );
