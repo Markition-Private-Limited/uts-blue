@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import Lenis from "lenis";
 import { createPortal } from "react-dom";
 import { useLenis } from "lenis/react";
 import { BookingWidget } from "./BookingWidget";
@@ -26,6 +27,8 @@ export function BookingModalProvider({ children }: { children: React.ReactNode }
   const [nonce, setNonce] = useState(0);
   const [mounted, setMounted] = useState(false);
   const lenis = useLenis();
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => setMounted(true), []);
 
@@ -53,6 +56,35 @@ export function BookingModalProvider({ children }: { children: React.ReactNode }
     };
   }, [isOpen, lenis, close]);
 
+  // The popup scrolls inside its own overlay, so give it its own smooth scrolling
+  // (matching the page) and let the form jump back to the top between steps.
+  useEffect(() => {
+    if (!isOpen || !mounted) return;
+    const wrapper = overlayRef.current;
+    const content = contentRef.current;
+    if (!wrapper || !content) return;
+    const popupLenis = new Lenis({
+      wrapper,
+      content,
+      duration: 1.1,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+    let raf = 0;
+    const tick = (time: number) => {
+      popupLenis.raf(time);
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    const toTop = () => popupLenis.scrollTo(0);
+    wrapper.addEventListener("booking-scroll-top", toTop);
+    return () => {
+      wrapper.removeEventListener("booking-scroll-top", toTop);
+      cancelAnimationFrame(raf);
+      popupLenis.destroy();
+    };
+  }, [isOpen, mounted, nonce]);
+
   const api = useMemo(() => ({ open }), [open]);
 
   return (
@@ -62,6 +94,7 @@ export function BookingModalProvider({ children }: { children: React.ReactNode }
         isOpen &&
         createPortal(
           <div
+            ref={overlayRef}
             role="dialog"
             aria-modal="true"
             aria-label="Book your chauffeur"
@@ -70,9 +103,9 @@ export function BookingModalProvider({ children }: { children: React.ReactNode }
             onMouseDown={(e) => {
               if (e.target === e.currentTarget) close();
             }}
-            className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-[#050B22]/80 px-4 pb-10 pt-6 backdrop-blur-md sm:pt-10"
+            className="no-scrollbar fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-[#050B22]/80 px-4 pb-10 pt-6 backdrop-blur-md sm:pt-10"
           >
-            <div className="relative w-full max-w-5xl pt-12">
+            <div ref={contentRef} className="relative w-full max-w-5xl pt-12">
               <button
                 type="button"
                 onClick={close}

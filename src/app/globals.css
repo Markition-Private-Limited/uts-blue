@@ -94,3 +94,12 @@ body::-webkit-scrollbar {
 
 /* rebuild */
 
+/* Scrollable but with no visible scrollbar (booking popup) */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+

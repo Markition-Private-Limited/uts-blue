@@ -132,7 +132,7 @@ export function BookingWidget({ initialDraft }: { initialDraft?: BookingDraft } 
     setStep(n);
     // Inside the popup the form scrolls within its own overlay, not the page.
     const popup = rootRef.current?.closest("[data-modal-scroll]");
-    if (popup) popup.scrollTo({ top: 0, behavior: "smooth" });
+    if (popup) popup.dispatchEvent(new CustomEvent("booking-scroll-top"));
     else if (lenis) lenis.scrollTo(0);
     else window.scrollTo({ top: 0, behavior: "smooth" });
   };
