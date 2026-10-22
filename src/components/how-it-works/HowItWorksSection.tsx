@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
+import { HeroBadge } from '@/components/hero/HeroBadge'
 
 const ease   = [0.22, 1, 0.36, 1] as const
 const BLUE   = '#1648D8'
@@ -75,15 +76,11 @@ export function HowItWorksSection() {
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.75, ease }}
         >
-          <div className="mb-5 flex items-center gap-3">
-            <span className="h-px w-8 bg-white/50" />
-            <span className="text-xs font-medium uppercase tracking-[0.22em] text-white/80">
-              Travel Your Way
-            </span>
-            <span className="h-px w-8 bg-white/50" />
+          <div className="mb-5 w-fit">
+            <HeroBadge text="Travel Your Way" />
           </div>
 
-          <h2 className="text-4xl font-bold leading-tight text-white xl:text-5xl">
+          <h2 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
             Luxury, Made Effortless
           </h2>
 
@@ -219,12 +216,12 @@ export function HowItWorksSection() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, ease }}
-                  className="relative z-10 max-w-[200px]"
+                  className="relative z-10 max-w-[200px] xl:max-w-[280px] 2xl:max-w-[380px]"
                 >
-                  <h3 className="text-[17px] font-bold leading-snug text-gray-900">
+                  <h3 className="text-[17px] font-bold leading-snug text-gray-900 xl:text-[21px] 2xl:text-[28px]">
                     {STEPS[active].title}
                   </h3>
-                  <p className="mt-2 text-[12.5px] leading-relaxed text-gray-500">
+                  <p className="mt-2 text-[12.5px] leading-relaxed text-gray-500 xl:text-[15px] 2xl:text-[19px]">
                     {STEPS[active].desc}
                   </p>
                 </motion.div>

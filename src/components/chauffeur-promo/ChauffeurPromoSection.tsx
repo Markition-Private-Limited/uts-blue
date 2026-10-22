@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { chauffeurPromoContent } from '@/content/chauffeur-promo.content'
 import { ChauffeurPromoCTA } from './ChauffeurPromoCTA'
+import { HeroBadge } from '@/components/hero/HeroBadge'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -30,13 +31,9 @@ export function ChauffeurPromoSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease }}
-          className="mb-6 flex items-center gap-3"
+          className="mb-6"
         >
-          <span className="h-px w-10 bg-blue-600" />
-          <span className="text-[11px] font-semibold tracking-[0.3em] text-blue-600 uppercase">
-            Our Clients, Our Priority
-          </span>
-          <span className="h-px w-10 bg-blue-600" />
+          <HeroBadge text="Our Clients, Our Priority" variant="blue" />
         </motion.div>
 
         {/* Headline */}
@@ -44,7 +41,7 @@ export function ChauffeurPromoSection() {
           initial={{ opacity: 0, y: 28 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.75, delay: 0.1, ease }}
-          className="whitespace-nowrap text-[clamp(1.5rem,3.8vw,3.75rem)] font-bold leading-tight tracking-tight text-gray-900"
+          className="text-3xl font-bold leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl"
         >
           Luxury Journeys.{' '}
           <span className="text-blue-600">Lasting Impressions</span>
@@ -55,7 +52,7 @@ export function ChauffeurPromoSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.65, delay: 0.2, ease }}
-          className="mt-6 max-w-2xl font-[family-name:var(--font-arimo)] text-[18px] font-normal leading-[123%] tracking-normal text-gray-600"
+          className="mt-6 max-w-2xl text-[15px] leading-relaxed text-gray-600"
         >
           Experience London in exceptional comfort with our professional chauffeur service. From airport transfers to executive travel and special occasions, we make every journey seamless, comfortable and memorable.
         </motion.p>

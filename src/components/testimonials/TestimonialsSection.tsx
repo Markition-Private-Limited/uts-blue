@@ -65,11 +65,11 @@ export function TestimonialsSection() {
         className="mx-auto max-w-2xl px-6 text-center mb-12"
       >
         <HeroBadge text="Our Clients, Our Priority" variant="blue" />
-        <h2 className="mt-5 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
+        <h2 className="mt-5 text-3xl font-bold leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
           Real Journeys.{' '}
           <span style={{ color: '#1648D8', fontStyle: 'italic' }}>Lasting Impressions.</span>
         </h2>
-        <p className="mt-4 text-sm leading-relaxed text-gray-500">
+        <p className="mt-4 text-[15px] leading-relaxed text-gray-500">
           The best journeys are remembered for how they make you feel. We aim to deliver a
           professional, comfortable and dependable experience every time you travel with us.
         </p>

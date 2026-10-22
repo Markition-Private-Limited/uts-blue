@@ -106,7 +106,7 @@ export function VideoStatsSection() {
         <div className="relative overflow-hidden rounded-3xl">
           <video
             ref={videoRef}
-            src="/stats-video/UTS%20video_2K_upscaled.mp4"
+            src="/Video/Video.mp4"
             poster="/video-thumb.png"
             autoPlay
             muted={muted}

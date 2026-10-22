@@ -140,7 +140,7 @@ export function WhySection() {
             transition={{ duration: 0.8, delay: 0.12, ease }}
           >
             <HeroBadge text="Why Travel With UTS" />
-            <h2 className="text-4xl font-bold leading-tight text-white lg:text-5xl">
+            <h2 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
               The Difference Is in Every Detail.
             </h2>
             <p className="text-[15px] leading-relaxed text-white/70">

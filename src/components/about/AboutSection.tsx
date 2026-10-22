@@ -23,14 +23,14 @@ export function AboutSection() {
       >
         <HeroBadge text="Executive Chauffeur Services" variant="blue" />
 
-        <h2 className="text-4xl font-bold leading-tight tracking-tight text-gray-900">
+        <h2 className="text-3xl font-bold leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
           More Than a Ride.
           <br />
           A Better{' '}
           <span style={{ color: '#1648D8' }}>Way to Travel</span>
         </h2>
 
-        <p className="text-sm leading-relaxed text-gray-500 max-w-3xl">
+        <p className="text-[15px] leading-relaxed text-gray-500 max-w-3xl">
           From everyday business travel to special occasions and airport transfers, United Travel
           Services brings together comfort, reliability and personal service to make every mile
           count. Professional chauffeurs, premium vehicles and a journey planned around you.

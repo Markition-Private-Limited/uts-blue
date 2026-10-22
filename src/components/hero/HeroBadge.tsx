@@ -18,7 +18,7 @@ export function HeroBadge({ text, variant = "light" }: HeroBadgeProps) {
     return (
       <div className="flex items-center justify-center gap-3">
         <span className="h-px w-8 bg-[#1648D8]" />
-        <span className="text-base font-normal text-[#1648D8]">{text}</span>
+        <span className="text-xs font-medium uppercase tracking-widest text-[#1648D8]">{text}</span>
         <span className="h-px w-8 bg-[#1648D8]" />
       </div>
     );
