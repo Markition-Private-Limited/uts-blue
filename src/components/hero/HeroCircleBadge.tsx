@@ -17,11 +17,14 @@ export function HeroCircleBadge() {
             d={`M 50,50 m -${radius},0 a ${radius},${radius} 0 1,1 ${radius * 2},0 a ${radius},${radius} 0 1,1 -${radius * 2},0`}
           />
         </defs>
-        <text className="fill-gray-900 font-semibold uppercase" style={{ fontSize: "7px" }}>
+        <text className="fill-gray-900 font-bold uppercase" style={{ fontSize: "9px" }}>
+          {/* textLength spreads the letters evenly around the whole ring so the text
+              fits exactly (no cut-off) at the larger size. */}
           <textPath
             href="#circle-text-path"
             startOffset="0%"
-            letterSpacing="9"
+            textLength={circumference - 2}
+            lengthAdjust="spacing"
           >
             {text}
           </textPath>
