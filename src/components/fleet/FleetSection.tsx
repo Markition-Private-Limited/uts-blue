@@ -2,8 +2,8 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRef, useState } from 'react'
-import { motion, AnimatePresence, useInView } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { motion, useInView } from 'framer-motion'
 import { Phone, CalendarCheck, MessageSquare, Users, ChevronLeft, ChevronRight } from 'lucide-react'
 import { HeroBadge } from '@/components/hero/HeroBadge'
 
@@ -25,7 +25,6 @@ const AMENITIES = [
   { label: 'Child Seat Available', icon: '/fleet/icons/child-seat-available.png' },
 ]
 
-const VISIBLE = 3
 const TABS = ['All Vehicles', 'Business Class', 'First Class', 'Economy Saloon', 'First Class Van', 'Van', 'MPV', 'Standard Van']
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -36,9 +35,9 @@ function FleetCard({ car, i }: { car: (typeof FLEET)[number]; i: number }) {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.55, delay: i * 0.09, ease }}
-      className="flex-none rounded-2xl overflow-hidden"
+      // 1 card on phones, 2 on tablets, 3 on desktop - all sliding in one track
+      className="shrink-0 snap-start basis-full overflow-hidden rounded-2xl sm:basis-[calc((100%-1rem)/2)] lg:basis-[calc((100%-2rem)/3)]"
       style={{
-        width: `calc((100% - ${16 * (VISIBLE - 1)}px) / ${VISIBLE})`,
         background: 'linear-gradient(160deg, #ffffff 0%, #eef2ff 100%)',
         border: '1px solid #dde5f7',
         boxShadow: '0 4px 24px rgba(22,72,216,0.07)',
@@ -117,38 +116,90 @@ function FleetCard({ car, i }: { car: (typeof FLEET)[number]; i: number }) {
   )
 }
 
-// ─── Slide variants (direction-aware) ─────────────────────────────────────────
-const slideVariants = {
-  enter: (dir: number) => ({ x: dir * 80, opacity: 0 }),
-  center: { x: 0, opacity: 1 },
-  exit: (dir: number) => ({ x: -dir * 80, opacity: 0 }),
-}
-
 // ─── Section ──────────────────────────────────────────────────────────────────
 export function FleetSection() {
-  const [page, setPage] = useState(0)
-  const [dir, setDir] = useState(1)
   const headerRef = useRef<HTMLDivElement>(null)
   const headerInView = useInView(headerRef, { once: true, amount: 0.4 })
 
   const [activeTab, setActiveTab] = useState('All Vehicles')
-
   const filtered = activeTab === 'All Vehicles' ? FLEET : FLEET.filter((c) => c.category === activeTab)
-  const PAGE_COUNT = Math.max(1, Math.ceil(filtered.length / VISIBLE))
-  const pageCards = filtered.slice(page * VISIBLE, (page + 1) * VISIBLE)
 
-  const selectTab = (tab: string) => {
-    if (tab === activeTab) return
-    setActiveTab(tab)
-    setDir(1)
-    setPage(0)
+  // ── Slider: a snap-scrolling track, driven by arrows, dots and autoplay ──
+  const trackRef = useRef<HTMLDivElement>(null)
+  const pausedRef = useRef(false)
+  // Autoplay stays off for a few seconds after someone uses an arrow or a dot.
+  const holdUntilRef = useRef(0)
+  const hold = () => {
+    holdUntilRef.current = Date.now() + 6000
+  }
+  const animRef = useRef(0)
+  const [edge, setEdge] = useState({ start: true, end: false, page: 0, pages: 1 })
+
+  const updateEdge = () => {
+    const el = trackRef.current
+    if (!el) return
+    const max = el.scrollWidth - el.clientWidth
+    const pages = Math.max(1, Math.ceil(el.scrollWidth / el.clientWidth - 0.05))
+    const page = max <= 0 ? 0 : Math.round((el.scrollLeft / max) * (pages - 1))
+    setEdge({ start: el.scrollLeft <= 2, end: el.scrollLeft >= max - 2, page, pages })
   }
 
-  const navigate = (newPage: number) => {
-    if (newPage === page) return
-    setDir(newPage > page ? 1 : -1)
-    setPage(newPage)
+  // New filter -> back to the first card.
+  useEffect(() => {
+    trackRef.current?.scrollTo({ left: 0 })
+    updateEdge()
+    window.addEventListener('resize', updateEdge)
+    return () => window.removeEventListener('resize', updateEdge)
+  }, [activeTab])
+
+  // Slow eased glide (native smooth-scroll is too quick and fights scroll-snap).
+  const glideTo = (target: number, duration = 900) => {
+    const el = trackRef.current
+    if (!el) return
+    cancelAnimationFrame(animRef.current)
+    const from = el.scrollLeft
+    const t0 = performance.now()
+    el.style.scrollSnapType = 'none'
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - t0) / duration)
+      const e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2
+      el.scrollLeft = from + (target - from) * e
+      if (p < 1) animRef.current = requestAnimationFrame(tick)
+      else el.style.scrollSnapType = ''
+    }
+    animRef.current = requestAnimationFrame(tick)
   }
+
+  const slide = (dir: 1 | -1) => {
+    const el = trackRef.current
+    if (!el) return
+    const card = el.firstElementChild as HTMLElement | null
+    const step = card ? card.offsetWidth + parseFloat(getComputedStyle(el).columnGap || '0') : el.clientWidth
+    const max = el.scrollWidth - el.clientWidth
+    glideTo(Math.max(0, Math.min(max, el.scrollLeft + dir * step)))
+  }
+
+  const goToPage = (page: number) => {
+    const el = trackRef.current
+    if (!el) return
+    const max = el.scrollWidth - el.clientWidth
+    glideTo(edge.pages <= 1 ? 0 : (max * page) / (edge.pages - 1))
+  }
+
+  // Autoplay: advance every 3s while the slider is on screen and not hovered; loop at the end.
+  useEffect(() => {
+    const id = setInterval(() => {
+      const el = trackRef.current
+      if (!el || pausedRef.current || Date.now() < holdUntilRef.current) return
+      const r = el.getBoundingClientRect()
+      if (r.bottom < 0 || r.top > window.innerHeight) return
+      const max = el.scrollWidth - el.clientWidth
+      if (max <= 2) return
+      if (el.scrollLeft >= max - 2) glideTo(0, 1200)
+      else slide(1)
+    }, 3000)
+    return () => clearInterval(id)
+  }, [activeTab])
 
   return (
     <section id="fleet" className="w-full scroll-mt-24 bg-white pt-8 pb-0 sm:pt-10 sm:pb-0">
@@ -178,7 +229,7 @@ export function FleetSection() {
           return (
             <button
               key={tab}
-              onClick={() => selectTab(tab)}
+              onClick={() => setActiveTab(tab)}
               className={`rounded-full border px-4 py-2 text-[12px] font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 ${
                 active
                   ? 'border-[#1648D8] bg-[#1648D8] text-white shadow-lg shadow-blue-600/30'
@@ -191,57 +242,60 @@ export function FleetSection() {
         })}
       </div>
 
-      {/* Carousel */}
-      <div className="px-6 overflow-hidden">
-        <AnimatePresence mode="wait" custom={dir}>
-          <motion.div
-            key={`${activeTab}-${page}`}
-            custom={dir}
-            variants={slideVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.5, ease }}
-            className="flex gap-4"
-          >
-            {pageCards.map((car, i) => (
-              <FleetCard key={car.id} car={car} i={i} />
-            ))}
-          </motion.div>
-        </AnimatePresence>
+      {/* Slider */}
+      <div className="relative px-6">
+        {(['prev', 'next'] as const).map((d) => {
+          const disabled = d === 'prev' ? edge.start : edge.end
+          return (
+            <button
+              key={d}
+              type="button"
+              aria-label={d === 'prev' ? 'Previous vehicles' : 'Next vehicles'}
+              onClick={() => {
+                hold()
+                slide(d === 'prev' ? -1 : 1)
+              }}
+              disabled={disabled}
+              className={`absolute top-[150px] z-10 flex h-10 w-10 items-center justify-center rounded-full border border-blue-200 bg-white text-blue-600 shadow-[0_4px_16px_rgba(22,72,216,0.2)] transition-all duration-300 hover:scale-110 hover:bg-[#1648D8] hover:text-white active:scale-100 disabled:pointer-events-none disabled:opacity-0 ${
+                d === 'prev' ? 'left-2' : 'right-2'
+              }`}
+            >
+              {d === 'prev' ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
+            </button>
+          )
+        })}
+
+        <div
+          ref={trackRef}
+          onScroll={updateEdge}
+          onMouseEnter={() => (pausedRef.current = true)}
+          onMouseLeave={() => (pausedRef.current = false)}
+          className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto"
+        >
+          {filtered.map((car, i) => (
+            <FleetCard key={`${activeTab}-${car.id}`} car={car} i={i} />
+          ))}
+        </div>
       </div>
 
-      {/* Navigation */}
+      {/* Dots */}
       <div className="mt-8 flex items-center justify-center gap-3">
-        <button
-          onClick={() => navigate(Math.max(0, page - 1))}
-          disabled={page === 0}
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-blue-200 text-blue-600 transition-all duration-300 hover:scale-110 hover:bg-blue-50 hover:shadow-md active:scale-100 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none"
-        >
-          <ChevronLeft size={16} />
-        </button>
-
-        {Array.from({ length: PAGE_COUNT }).map((_, i) => (
+        {Array.from({ length: edge.pages }).map((_, i) => (
           <button
             key={i}
-            onClick={() => navigate(i)}
-            aria-label={`Go to page ${i + 1}`}
+            onClick={() => {
+              hold()
+              goToPage(i)
+            }}
+            aria-label={`Go to slide ${i + 1}`}
             className="rounded-full transition-all duration-300 hover:scale-125"
             style={{
-              width: page === i ? 20 : 8,
+              width: edge.page === i ? 20 : 8,
               height: 8,
-              background: page === i ? '#1648D8' : '#d1d5f5',
+              background: edge.page === i ? '#1648D8' : '#d1d5f5',
             }}
           />
         ))}
-
-        <button
-          onClick={() => navigate(Math.min(PAGE_COUNT - 1, page + 1))}
-          disabled={page === PAGE_COUNT - 1}
-          className="flex h-8 w-8 items-center justify-center rounded-full border border-blue-200 text-blue-600 transition-all duration-300 hover:scale-110 hover:bg-blue-50 hover:shadow-md active:scale-100 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-none"
-        >
-          <ChevronRight size={16} />
-        </button>
       </div>
     </section>
   )
