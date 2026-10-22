@@ -11,6 +11,6 @@ export const heroContent: HeroContent = {
     "Experience luxury chauffeur services across London and beyond, with professional drivers, premium vehicles and a journey planned around your needs.",
   cta: [
     { label: "Book Your Chauffeur", href: "/book", variant: "primary" },
-    { label: "Explore Our Fleet", href: "/fleet", variant: "secondary" },
+    { label: "Explore Our Fleet", href: "/#fleet", variant: "secondary" },
   ],
 };

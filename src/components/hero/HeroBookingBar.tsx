@@ -4,18 +4,23 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { DRAFT_KEY, tomorrowISO, type BookingDraft } from "@/lib/booking";
 
+const EMPTY_DRAFT: BookingDraft = { name: "", phone: "", pickup: "", date: "" };
+
 export function HeroBookingBar() {
   const router = useRouter();
-  const [draft, setDraft] = useState<BookingDraft>({
-    name: "",
-    phone: "",
-    pickup: "",
-    date: "",
-  });
+  const [draft, setDraft] = useState<BookingDraft>(EMPTY_DRAFT);
 
   // Earliest selectable date — read after mount so no Date is evaluated during render.
   const [minDate, setMinDate] = useState<string | undefined>(undefined);
-  useEffect(() => setMinDate(tomorrowISO()), []);
+  useEffect(() => {
+    setMinDate(tomorrowISO());
+    // A fresh visit/refresh of the home page always starts with a clean form.
+    try {
+      sessionStorage.removeItem(DRAFT_KEY);
+    } catch {
+      /* storage unavailable */
+    }
+  }, []);
 
   const set = (patch: Partial<BookingDraft>) => setDraft((d) => ({ ...d, ...patch }));
 
@@ -27,12 +32,15 @@ export function HeroBookingBar() {
     } catch {
       /* storage unavailable — the booking page just starts at step 1 */
     }
+    // Reset the bar so coming back to the home page shows an empty form.
+    setDraft(EMPTY_DRAFT);
     router.push("/book");
   };
 
   return (
     <form
       onSubmit={handleSubmit}
+      autoComplete="off"
       className="w-full rounded-2xl border border-white/10 px-6 py-5"
       style={{
         backgroundColor: "rgba(0, 0, 0, 0.2)",
@@ -129,6 +137,7 @@ function BookingField({
         type={type}
         placeholder={placeholder}
         required={required}
+        autoComplete="off"
         min={min}
         value={value}
         onChange={(e) => onChange(e.target.value)}

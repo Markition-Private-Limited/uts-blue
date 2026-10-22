@@ -6,7 +6,7 @@ const navLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Our Services", href: "/services" },
-  { label: "Our Fleet", href: "/fleet" },
+  { label: "Our Fleet", href: "/#fleet" },
   { label: "Contact Us", href: "/contact" },
 ];
 
@@ -50,7 +50,7 @@ export function Navbar() {
 
         {/* Actions */}
         <div className="flex items-center gap-3">
-          <ArrowButton label="Get Started" href="/get-started" variant="blue" />
+          <ArrowButton label="Get Started" href="/book" variant="blue" />
           <ArrowButton label="Sign in" href="/signin" variant="outline" />
         </div>
       </nav>

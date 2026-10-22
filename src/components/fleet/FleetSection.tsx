@@ -150,7 +150,7 @@ export function FleetSection() {
   }
 
   return (
-    <section className="w-full bg-white pt-8 pb-0 sm:pt-10 sm:pb-0">
+    <section id="fleet" className="w-full scroll-mt-24 bg-white pt-8 pb-0 sm:pt-10 sm:pb-0">
       {/* Header */}
       <motion.div
         ref={headerRef}
