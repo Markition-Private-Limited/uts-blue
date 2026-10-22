@@ -3,63 +3,29 @@
 import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
-import { Phone, CalendarCheck, MessageSquare, Briefcase, Users, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Phone, CalendarCheck, MessageSquare, Users, ChevronLeft, ChevronRight } from 'lucide-react'
 import { HeroBadge } from '@/components/hero/HeroBadge'
 
 // ─── Fleet data ───────────────────────────────────────────────────────────────
 const FLEET = [
-  {
-    id: 1,
-    name: 'BMW 7 SERIES 2024',
-    desc: 'Mercedes-Benz E-Class and BMW 5 Series vehicles, ideal for refined business travel.',
-    img: '/fleet/bmw-7-series.png',
-    class: 'Business Class',
-    passengers: 4,
-  },
-  {
-    id: 2,
-    name: 'MERCEDES S-CLASS',
-    desc: 'The pinnacle of executive luxury — spacious, whisper-quiet, and impeccably appointed.',
-    img: '/fleet/mercedes-s-class.png',
-    class: 'First Class',
-    passengers: 4,
-  },
-  {
-    id: 3,
-    name: 'RANGE ROVER VOGUE',
-    desc: 'Commanding presence with supreme comfort, perfect for VIP transfers and special occasions.',
-    img: '/fleet/range-rover-suv.png',
-    class: 'SUV Class',
-    passengers: 5,
-  },
-  {
-    id: 4,
-    name: 'BMW 7 SERIES LWB',
-    desc: 'Long-wheelbase executive saloon with extended rear cabin, perfect for VIP delegation travel.',
-    img: '/fleet/bmw-7-series.png',
-    class: 'Business Class',
-    passengers: 4,
-  },
-  {
-    id: 5,
-    name: 'MERCEDES S 580',
-    desc: 'The flagship S-Class with AMG styling — first-class airborne comfort on every road.',
-    img: '/fleet/mercedes-s-class.png',
-    class: 'First Class',
-    passengers: 4,
-  },
-  {
-    id: 6,
-    name: 'RANGE ROVER AUTOBIOGRAPHY',
-    desc: 'The ultimate Range Rover — hand-crafted luxury, maximum presence, seats up to 6 passengers.',
-    img: '/fleet/range-rover-suv.png',
-    class: 'SUV Class',
-    passengers: 6,
-  },
+  { id: 'economy-saloon', category: 'Economy Saloon', name: 'VW Passat / Kia Niro or similar', seating: 'According to model', img: '/fleet/economy-saloon-vw-passat.webp' },
+  { id: 'business-class', category: 'Business Class', name: 'Mercedes-Benz E-Class or similar', seating: 'According to model', img: '/fleet/business-class-mercedes-e-class.webp' },
+  { id: 'first-class', category: 'First Class', name: 'Mercedes-Benz S-Class or similar', seating: 'According to model', img: '/fleet/first-class-mercedes-s-class.webp' },
+  { id: 'first-class-van', category: 'First Class Van', name: 'Mercedes-Benz V-Class or similar', seating: 'According to model', img: '/fleet/first-class-van-mercedes-v-class.webp' },
+  { id: 'van', category: 'Van', name: '8/9 - Seater Van', seating: '8–9 passengers', img: '/fleet/van-8-9-seater.webp' },
+  { id: 'mpv', category: 'MPV', name: 'VW Sharan / Ford Galaxy or similar', seating: '7 passengers', img: '/fleet/mpv-vw-sharan.webp' },
+  { id: 'standard-van', category: 'Standard Van', name: 'Hyundai i800 / VW Transporter or similar', seating: 'According to model', img: '/fleet/standard-van-hyundai-i800.webp' },
+]
+
+const AMENITIES = [
+  { label: 'Wifi Available', icon: '/fleet/icons/wifi-available.png' },
+  { label: 'GPS Tracking', icon: '/fleet/icons/gps-tracking.png' },
+  { label: 'Water Available', icon: '/fleet/icons/water-available.png' },
+  { label: 'Child Seat Available', icon: '/fleet/icons/child-seat-available.png' },
 ]
 
 const VISIBLE = 3
-const PAGE_COUNT = Math.ceil(FLEET.length / VISIBLE)
+const TABS = ['All Vehicles', 'Business Class', 'First Class', 'Economy Saloon', 'First Class Van', 'Van', 'MPV', 'Standard Van']
 const ease = [0.22, 1, 0.36, 1] as const
 
 // ─── Individual fleet card ─────────────────────────────────────────────────────
@@ -77,52 +43,71 @@ function FleetCard({ car, i }: { car: (typeof FLEET)[number]; i: number }) {
         boxShadow: '0 4px 24px rgba(22,72,216,0.07)',
       }}
     >
-      <div className="px-5 pt-5 pb-3">
-        <h3 className="text-[15px] font-bold text-gray-900 tracking-wide mb-1">{car.name}</h3>
-        <p className="text-[13px] text-gray-500 leading-snug">{car.desc}</p>
-      </div>
-
-      <div className="px-5">
-        <div className="relative w-full h-48">
+      <div className="px-4 pt-4">
+        <div className="relative h-48 w-full overflow-hidden rounded-xl">
           <Image
             src={car.img}
             alt={car.name}
             fill
-            className="object-cover object-center rounded-lg"
+            className="object-cover object-center"
             sizes="(max-width: 1280px) 33vw, 420px"
           />
+          <span
+            className="absolute left-3 top-3 rounded-full px-3 py-1 text-[11px] font-semibold text-white"
+            style={{ background: '#1648D8' }}
+          >
+            {car.category}
+          </span>
         </div>
       </div>
 
-      <div className="flex items-center gap-5 px-5 pt-3 pb-3">
-        <span className="flex items-center gap-1.5 text-[12px] text-gray-600">
-          <Briefcase size={13} className="text-blue-600 shrink-0" />
-          {car.class}
-        </span>
-        <span className="flex items-center gap-1.5 text-[12px] text-gray-600">
-          <Users size={13} className="text-blue-600 shrink-0" />
-          {car.passengers} Passengers
-        </span>
+      <div className="px-5 pt-4 pb-3">
+        <h3 className="mb-3 text-[15px] font-bold leading-snug tracking-wide text-gray-900">{car.name}</h3>
+
+        <div className="mb-3 flex items-center justify-between gap-2 rounded-lg border border-blue-100 bg-white px-3 py-2 text-[11px]">
+          <span className="flex shrink-0 items-center gap-1.5 font-bold uppercase tracking-wide text-gray-900">
+            <Users size={13} className="shrink-0 text-blue-600" />
+            Seating:
+          </span>
+          <span className="text-right text-gray-600">{car.seating}</span>
+        </div>
+
+        <div className="grid grid-cols-4 gap-2">
+          {AMENITIES.map(({ label, icon }) => (
+            <div key={label} className="flex flex-col items-center gap-1 text-center">
+              <span
+                aria-hidden
+                className="block h-5 w-5"
+                style={{
+                  background: '#1648D8',
+                  WebkitMask: `url(${icon}) center / contain no-repeat`,
+                  mask: `url(${icon}) center / contain no-repeat`,
+                }}
+              />
+              <span className="text-[10px] leading-tight text-gray-600">{label}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="mx-5 h-px bg-blue-100" />
 
-      <div className="flex items-center gap-2 px-5 py-4">
+      <div className="flex items-center gap-1.5 px-4 py-4">
         <button
-          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg py-2 text-[12px] font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
+          className="flex-1 inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-lg px-1 max-xl:[&>svg]:hidden py-2 text-[12px] font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
           style={{ background: '#1648D8' }}
         >
           <Phone size={12} />
           Call Now
         </button>
         <button
-          className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg py-2 text-[12px] font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
+          className="flex-1 inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-lg px-1 max-xl:[&>svg]:hidden py-2 text-[12px] font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
           style={{ background: '#22c55e' }}
         >
           <CalendarCheck size={12} />
           Book Now
         </button>
-        <button className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-lg border border-blue-200 py-2 text-[12px] font-semibold text-blue-700 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100 hover:bg-blue-50">
+        <button className="flex-1 inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-lg px-1 max-xl:[&>svg]:hidden border border-blue-200 py-2 text-[12px] font-semibold text-blue-700 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100 hover:bg-blue-50">
           <MessageSquare size={12} />
           Enquiry
         </button>
@@ -145,7 +130,18 @@ export function FleetSection() {
   const headerRef = useRef<HTMLDivElement>(null)
   const headerInView = useInView(headerRef, { once: true, amount: 0.4 })
 
-  const pageCards = FLEET.slice(page * VISIBLE, (page + 1) * VISIBLE)
+  const [activeTab, setActiveTab] = useState('All Vehicles')
+
+  const filtered = activeTab === 'All Vehicles' ? FLEET : FLEET.filter((c) => c.category === activeTab)
+  const PAGE_COUNT = Math.max(1, Math.ceil(filtered.length / VISIBLE))
+  const pageCards = filtered.slice(page * VISIBLE, (page + 1) * VISIBLE)
+
+  const selectTab = (tab: string) => {
+    if (tab === activeTab) return
+    setActiveTab(tab)
+    setDir(1)
+    setPage(0)
+  }
 
   const navigate = (newPage: number) => {
     if (newPage === page) return
@@ -161,7 +157,7 @@ export function FleetSection() {
         initial={{ opacity: 0, y: 36 }}
         animate={headerInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.75, ease }}
-        className="mx-auto max-w-2xl px-6 text-center mb-12"
+        className="mx-auto max-w-2xl px-6 text-center mb-8"
       >
         <HeroBadge text="Our Premium Fleet" variant="blue" />
         <h2 className="mt-5 text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl">
@@ -174,11 +170,31 @@ export function FleetSection() {
         </p>
       </motion.div>
 
+      {/* Filter */}
+      <div className="mx-auto mb-8 flex max-w-5xl flex-wrap items-center justify-center gap-2 px-6">
+        {TABS.map((tab) => {
+          const active = tab === activeTab
+          return (
+            <button
+              key={tab}
+              onClick={() => selectTab(tab)}
+              className={`rounded-full border px-4 py-2 text-[12px] font-medium transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 ${
+                active
+                  ? 'border-[#1648D8] bg-[#1648D8] text-white shadow-lg shadow-blue-600/30'
+                  : 'border-blue-200 bg-white text-blue-700 hover:bg-blue-50'
+              }`}
+            >
+              {tab}
+            </button>
+          )
+        })}
+      </div>
+
       {/* Carousel */}
       <div className="px-6 overflow-hidden">
         <AnimatePresence mode="wait" custom={dir}>
           <motion.div
-            key={page}
+            key={`${activeTab}-${page}`}
             custom={dir}
             variants={slideVariants}
             initial="enter"
