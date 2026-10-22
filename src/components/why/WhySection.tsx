@@ -183,7 +183,7 @@ export function WhySection() {
             >
               <div className="rides-ticker-inner">
                 {[0, 1].map((i) => (
-                  <div key={i} style={{ height: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div key={i} style={{ display: 'flex', justifyContent: 'center', padding: '60px 0' }}>
                     <span
                       style={{
                         fontSize: 100,
@@ -192,10 +192,11 @@ export function WhySection() {
                         color: 'white',
                         display: 'block',
                         whiteSpace: 'nowrap',
-                        transform: 'rotate(-90deg)',
+                        writingMode: 'vertical-rl',
+                        transform: 'rotate(180deg)',
                       }}
                     >
-                      RIDES
+                      LUXURY RIDES
                     </span>
                   </div>
                 ))}

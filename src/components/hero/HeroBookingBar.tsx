@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useBookingModal } from "@/components/booking/BookingModal";
 import { DRAFT_KEY, tomorrowISO, type BookingDraft } from "@/lib/booking";
 
 const EMPTY_DRAFT: BookingDraft = { name: "", phone: "", pickup: "", date: "" };
 
 export function HeroBookingBar() {
-  const router = useRouter();
+  const { open: openBooking } = useBookingModal();
   const [draft, setDraft] = useState<BookingDraft>(EMPTY_DRAFT);
 
   // Earliest selectable date — read after mount so no Date is evaluated during render.
@@ -24,17 +24,12 @@ export function HeroBookingBar() {
 
   const set = (patch: Partial<BookingDraft>) => setDraft((d) => ({ ...d, ...patch }));
 
-  // Hand the details to /book (which continues from the Vehicle step).
+  // Open the booking form as a popup over the home page, pre-filled from the bar.
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ ...draft, date: draft.date || tomorrowISO() }));
-    } catch {
-      /* storage unavailable — the booking page just starts at step 1 */
-    }
-    // Reset the bar so coming back to the home page shows an empty form.
+    openBooking({ ...draft, date: draft.date || tomorrowISO() });
+    // Reset the bar so it is empty again once the popup is closed.
     setDraft(EMPTY_DRAFT);
-    router.push("/book");
   };
 
   return (

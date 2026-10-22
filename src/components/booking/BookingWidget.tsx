@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useLenis } from "lenis/react";
 import {
@@ -50,7 +50,7 @@ const BACK_BTN = "flex items-center gap-1 text-xs text-[#9DB0E3] transition-colo
 
 type Errors = Partial<Record<"pickup" | "dropoff" | "date" | "time", string>>;
 
-export function BookingWidget() {
+export function BookingWidget({ initialDraft }: { initialDraft?: BookingDraft } = {}) {
   const [ready, setReady] = useState(false);
   const [step, setStep] = useState(1);
   const [state, setState] = useState<BookingState>(defaultBookingState);
@@ -59,21 +59,29 @@ export function BookingWidget() {
   const [selected, setSelected] = useState<{ vehicle: Vehicle; fare: number } | null>(null);
   const [ref, setRef] = useState("");
   const lenis = useLenis();
+  const rootRef = useRef<HTMLDivElement>(null);
 
   // Pre-fill the journey from whatever the hero "Find Your Ride" bar saved.
   useEffect(() => {
     setState((s) => (s.date ? s : { ...s, date: tomorrowISO() }));
     try {
-      const raw = sessionStorage.getItem(DRAFT_KEY);
-      if (raw) {
-        const draft = JSON.parse(raw) as BookingDraft;
+      // A draft passed in directly (popup) wins; otherwise pick up one saved for the /book page.
+      let draft = initialDraft;
+      if (!draft) {
+        const raw = sessionStorage.getItem(DRAFT_KEY);
+        if (raw) {
+          draft = JSON.parse(raw) as BookingDraft;
+          sessionStorage.removeItem(DRAFT_KEY);
+        }
+      }
+      if (draft) {
+        const d = draft;
         setState((s) => ({
           ...s,
-          pickup: draft.pickup || s.pickup,
-          date: draft.date || s.date,
-          passengerInfo: { ...s.passengerInfo, name: draft.name || "", phone: draft.phone || "" },
+          pickup: d.pickup || s.pickup,
+          date: d.date || s.date,
+          passengerInfo: { ...s.passengerInfo, name: d.name || "", phone: d.phone || "" },
         }));
-        sessionStorage.removeItem(DRAFT_KEY);
       }
     } catch {
       /* storage unavailable — start from step 1 */
@@ -122,7 +130,10 @@ export function BookingWidget() {
 
   const goStep = (n: number) => {
     setStep(n);
-    if (lenis) lenis.scrollTo(0);
+    // Inside the popup the form scrolls within its own overlay, not the page.
+    const popup = rootRef.current?.closest("[data-modal-scroll]");
+    if (popup) popup.scrollTo({ top: 0, behavior: "smooth" });
+    else if (lenis) lenis.scrollTo(0);
     else window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -161,7 +172,7 @@ export function BookingWidget() {
   }
 
   return (
-    <div className="uts-book uts-card w-full max-w-5xl rounded-2xl p-4 text-[#F6F6F4] sm:p-6 md:p-8">
+    <div ref={rootRef} className="uts-book uts-card w-full max-w-5xl rounded-2xl p-4 text-[#F6F6F4] sm:p-6 md:p-8">
       {/* Progress */}
       <nav aria-label="Booking Progress" className="mb-8 border-b border-white/10 pb-5">
         <ol className="flex items-center justify-between text-xs font-medium sm:text-sm">

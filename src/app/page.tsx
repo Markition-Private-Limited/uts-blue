@@ -10,10 +10,11 @@ import { TestimonialsSection } from "@/components/testimonials/TestimonialsSecti
 import { HowItWorksSection } from "@/components/how-it-works/HowItWorksSection";
 import { VideoStatsSection } from "@/components/video-stats/VideoStatsSection";
 import { FadeInSection } from "@/components/ui/FadeInSection";
+import { BookingModalProvider } from "@/components/booking/BookingModal";
 
 export default function Home() {
   return (
-    <>
+    <BookingModalProvider>
       <Navbar />
       <div className="relative overflow-x-clip">
         <HeroSection />
@@ -56,6 +57,6 @@ export default function Home() {
         <FadeInSection><TestimonialsSection /></FadeInSection>
         <FadeInSection className="mb-12"><ChauffeurPromoSection /></FadeInSection>
       </main>
-    </>
+    </BookingModalProvider>
   );
 }

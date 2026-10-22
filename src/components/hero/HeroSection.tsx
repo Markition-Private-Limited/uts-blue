@@ -14,24 +14,33 @@ export function HeroSection() {
 
   return (
     <section className="relative flex min-h-screen flex-col overflow-hidden bg-white">
-      {/* Background image */}
+      {/* Background video */}
       <motion.div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('/hero-bg.png')",
-          filter: 'blur(4px)',
-          transform: 'scale(1.05)',
-        }}
+        className="absolute inset-0"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1.2, ease }}
         aria-hidden
-      />
+      >
+        <video
+          src="/HERO%20VIDEO/Untitled%20design%20(1)_4K_upscaled.mp4"
+          poster="/hero-bg.png"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="h-full w-full select-none object-cover object-center"
+        />
+      </motion.div>
 
-      {/* Blue-tinted overlay */}
+      {/* Dark blue gradient over the video */}
       <div
         className="absolute inset-0"
-        style={{ background: '#1E4FD926' }}
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(5,11,34,0.88) 0%, rgba(10,26,85,0.74) 45%, rgba(5,11,34,0.93) 100%)',
+        }}
         aria-hidden
       />
 

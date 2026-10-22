@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Cinzel } from "next/font/google";
 import { Navbar } from "@/components/navbar";
 import { BookingWidget } from "@/components/booking/BookingWidget";
+import { FadeInSection } from "@/components/ui/FadeInSection";
+import { WhySection } from "@/components/why/WhySection";
+import { TestimonialsSection } from "@/components/testimonials/TestimonialsSection";
+import { ChauffeurPromoSection } from "@/components/chauffeur-promo";
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -19,13 +23,25 @@ export default function BookPage() {
     <div className={`${cinzel.variable} relative min-h-screen bg-[#050B22]`}>
       <Navbar />
 
-      {/* Cinematic dark backdrop */}
-      <div
-        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/hero-bg-new.png')" }}
-        aria-hidden
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#050B22]/85 via-[#0A1A55]/88 to-[#050B22]/95" />
+      {/* Same hero video + dark blue gradient as the home page */}
+      <div className="fixed inset-0 z-0 overflow-hidden" aria-hidden>
+        <video
+          src="/HERO%20VIDEO/Untitled%20design%20(1)_4K_upscaled.mp4"
+          poster="/hero-bg.png"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="h-full w-full select-none object-cover object-center"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(5,11,34,0.88) 0%, rgba(10,26,85,0.74) 45%, rgba(5,11,34,0.93) 100%)',
+          }}
+        />
       </div>
 
       <main className="relative z-10 flex flex-col items-center px-4 pb-16 pt-32 md:pb-24 md:pt-40">
@@ -41,6 +57,19 @@ export default function BookPage() {
 
         <BookingWidget />
       </main>
+
+      {/* Home-page sections, from "The Difference Is in Every Detail." onwards */}
+      <div className="relative z-10 bg-white pb-12 pt-4">
+        <FadeInSection>
+          <WhySection />
+        </FadeInSection>
+        <FadeInSection>
+          <TestimonialsSection />
+        </FadeInSection>
+        <FadeInSection>
+          <ChauffeurPromoSection />
+        </FadeInSection>
+      </div>
     </div>
   );
 }

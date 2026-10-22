@@ -5,9 +5,11 @@ interface ArrowButtonProps {
   href: string;
   variant: "blue" | "outline";
   className?: string;
+  /** When set, the click runs this instead of navigating (href stays as the no-JS fallback). */
+  onClick?: () => void;
 }
 
-export function ArrowButton({ label, href, variant, className = "" }: ArrowButtonProps) {
+export function ArrowButton({ label, href, variant, className = "", onClick }: ArrowButtonProps) {
   const blueStyle: React.CSSProperties = {
     background:
       "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 51.44%, rgba(255,255,255,0) 100%), linear-gradient(0deg, #1648D8, #1648D8)",
@@ -22,6 +24,14 @@ export function ArrowButton({ label, href, variant, className = "" }: ArrowButto
   return (
     <Link
       href={href}
+      onClick={
+        onClick
+          ? (e) => {
+              e.preventDefault();
+              onClick();
+            }
+          : undefined
+      }
       className={`inline-flex items-center gap-3 rounded-full py-1 pl-1 pr-5 text-sm font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100 ${className}`}
       style={variant === "blue" ? blueStyle : outlineStyle}
     >

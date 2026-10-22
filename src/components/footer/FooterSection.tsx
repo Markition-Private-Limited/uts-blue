@@ -22,7 +22,7 @@ export function FooterSection() {
   } = footerContent;
 
   return (
-    <footer className="bg-white px-4 py-6 sm:px-6">
+    <footer className="relative z-10 bg-white px-4 py-6 sm:px-6">
       <div
         className="relative mx-auto overflow-hidden rounded-[32px] bg-[radial-gradient(ellipse_at_top,_#1a1a1a,_#000000_70%)] bg-cover bg-center px-8 py-10 sm:px-12 lg:px-16"
         style={{

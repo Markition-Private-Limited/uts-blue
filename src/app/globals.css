@@ -34,9 +34,10 @@ body::-webkit-scrollbar {
 }
 
 /*
-  WhySection RIDES vertical ticker:
-  Inner wrapper is 200% tall (two copies stacked).
-  0% → -50% means content scrolls upward: text enters from the bottom and exits at the top.
+  WhySection LUXURY RIDES vertical ticker:
+  Two identical copies are stacked, each as tall as the text itself (vertical writing mode),
+  so the inner wrapper is exactly two copies tall and never depends on the section height.
+  0% → -50% scrolls one copy upward: text enters from the bottom and exits at the top, seamlessly.
 */
 @keyframes rides-vertical-up {
   from { transform: translateY(0); }
@@ -44,8 +45,7 @@ body::-webkit-scrollbar {
 }
 
 .rides-ticker-inner {
-  height: 200%;
-  animation: rides-vertical-up 3.8s linear infinite;
+  animation: rides-vertical-up 5.2s linear infinite;
 }
 
 /* ── Booking page (dark navy, UTS blue accents) ─────────────────────────── */
@@ -93,3 +93,4 @@ body::-webkit-scrollbar {
 }
 
 /* rebuild */
+
