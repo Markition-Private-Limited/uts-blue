@@ -7,7 +7,7 @@ export function HeroCircleBadge() {
   return (
     <div
       className="relative flex items-center justify-center rounded-full bg-white"
-      style={{ width: 108, height: 108, boxShadow: '0 4px 24px rgba(0,0,0,0.13)' }}
+      style={{ width: 100, height: 100, boxShadow: '0 4px 24px rgba(0,0,0,0.13)' }}
     >
       {/* Thin guide ring */}
       <svg
@@ -31,7 +31,7 @@ export function HeroCircleBadge() {
           />
         </defs>
         <text
-          fontSize="8.5"
+          fontSize="9.2"
           fontWeight="500"
           fill="#111111"
           letterSpacing="1.2"
