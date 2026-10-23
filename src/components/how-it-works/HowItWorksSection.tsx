@@ -199,14 +199,14 @@ export function HowItWorksSection() {
 
               {/* CONTENT — text + watermark only (car is outside this div) */}
               <div className="relative flex flex-1 flex-col items-start justify-center overflow-hidden px-7 py-6">
-                {/* Watermark clipped inside content area */}
-                <div className="pointer-events-none absolute inset-0">
+                {/* Watermark — crisp SVG, padded equally from top/right */}
+                <div className="pointer-events-none absolute" style={{ top: 24, right: 24, width: 150, height: 150 }}>
                   <Image
-                    src="/mask-group.png"
+                    src="/mask-group.svg"
                     alt=""
                     fill
-                    className="object-contain object-right-bottom"
-                    style={{ opacity: 0.75 }}
+                    className="object-contain"
+                    style={{ opacity: 0.05 }}
                     unoptimized
                   />
                 </div>
