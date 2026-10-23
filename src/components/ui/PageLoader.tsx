@@ -15,7 +15,7 @@ const PRELOAD_SRCS = [
 ]
 
 const HERO_VIDEO  = '/HERO%20VIDEO/Untitled%20design%20(1)_4K_upscaled_2k.mp4'
-const STATS_VIDEO = '/Video/Video.webm'
+const STATS_VIDEO = '/Video/Video_2k.mp4'
 
 
 const STREAKS = [

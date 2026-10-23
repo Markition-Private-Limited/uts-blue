@@ -117,7 +117,7 @@ export function VideoStatsSection() {
         <div className="relative overflow-hidden rounded-3xl">
           <video
             ref={videoRef}
-            src="/Video/Video.webm"
+            src="/Video/Video_2k.mp4"
             poster="/video-thumb.png"
             autoPlay
             muted={muted}
