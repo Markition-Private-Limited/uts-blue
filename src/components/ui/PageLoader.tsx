@@ -48,9 +48,6 @@ const PRELOAD_SRCS = [
   '/testimonials/person-4.jpg',
 ]
 
-// Both videos must have first-frame data before the loader lifts.
-const HERO_VIDEO  = '/HERO%20VIDEO/Untitled%20design%20(1)_4K_upscaled_2k.mp4'
-const STATS_VIDEO = '/Video/Video.webm'
 
 const STREAKS = [
   { top: '12%', width: 110, duration: '2.70s', delay: '-1.25s' },
@@ -108,71 +105,39 @@ export default function PageLoader() {
     const startedAt = performance.now()
     void startedAt // used only to satisfy linter; hide timing is now car-driven
 
-    // Grand total: every image + 2 videos. Progress is purely event-driven.
-    const GRAND_TOTAL = PRELOAD_SRCS.length + 2
+    // Progress is purely event-driven from images alone.
+    // Videos are NOT gated — they load naturally via preload="auto" on their elements.
+    const GRAND_TOTAL = PRELOAD_SRCS.length
     let loaded = 0
     let domReady = false
     let allLoaded = false
 
     const onAsset = () => {
       loaded++
-      // Cap display at 99 until assets are truly done
       setProgress(Math.min(99, Math.round((loaded / GRAND_TOTAL) * 100)))
       if (loaded >= GRAND_TOTAL) { allLoaded = true; tryFinish() }
     }
 
     const tryFinish = () => {
       if (!allLoaded || !domReady) return
-      // Signal React — the assetsReady effect will speed up the car and hide on exit
       setAssetsReady(true)
     }
 
-    // Images
     PRELOAD_SRCS.forEach(src => {
       const img = new window.Image()
       img.onload = img.onerror = onAsset
       img.src = src
     })
 
-    // Hero video (off-DOM, muted — just buffering first frames)
-    const heroVid = document.createElement('video')
-    heroVid.muted = true
-    heroVid.preload = 'auto'
-    const onHero = () => onAsset()
-    heroVid.addEventListener('loadeddata', onHero, { once: true })
-    heroVid.addEventListener('error',      onHero, { once: true })
-    heroVid.src = HERO_VIDEO
-
-    // Stats video (off-DOM, muted — counts as one asset; cleanup destroys it
-    // before any on-DOM element renders, so no duplicate audio)
-    const statsVid = document.createElement('video')
-    statsVid.muted = true
-    statsVid.preload = 'auto'
-    const onStats = () => onAsset()
-    statsVid.addEventListener('loadeddata', onStats, { once: true })
-    statsVid.addEventListener('error',      onStats, { once: true })
-    statsVid.src = STATS_VIDEO
-
-    // DOM-ready gate
     if (document.readyState === 'complete') {
       domReady = true; tryFinish()
     } else {
       window.addEventListener('load', () => { domReady = true; tryFinish() }, { once: true })
     }
 
-    // True last-resort fallback — only fires if network is genuinely broken
     const fallback = setTimeout(() => setVisible(false), FALLBACK_VISIBLE_MS)
 
-    return () => {
-      clearTimeout(fallback)
-      const destroyVid = (v: HTMLVideoElement, onFn: () => void) => {
-        v.removeEventListener('loadeddata', onFn)
-        v.removeEventListener('error',      onFn)
-        v.pause(); v.src = ''; v.load()
-      }
-      destroyVid(heroVid,  onHero)
-      destroyVid(statsVid, onStats)
-    }
+    return () => { clearTimeout(fallback) }
   }, [])
 
   return (

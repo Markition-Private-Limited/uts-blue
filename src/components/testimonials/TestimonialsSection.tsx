@@ -72,21 +72,27 @@ function QuoteIcon({ active }: { active: boolean }) {
 function Card({ name, role, img, quote, active, onClick }: {
   name: string; role: string; img: string; quote: string; active: boolean; onClick?: () => void
 }) {
+  const [hovered, setHovered] = useState(false)
+  const lit = active || hovered
+
   return (
     <div
       className="flex-none flex flex-col items-center select-none"
       style={{ paddingTop: 44, cursor: onClick ? 'pointer' : 'default' }}
       onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       {/* Avatar overflows above card */}
       <div
         className="rounded-full z-10"
         style={{
           width: 110, height: 110, padding: 4, marginBottom: -42,
-          background: active ? 'rgba(255,255,255,0.2)' : 'transparent',
-          border: `2px solid ${active ? 'rgba(180,180,180,0.7)' : '#1648D8'}`,
+          background: lit ? 'rgba(255,255,255,0.2)' : 'transparent',
+          border: `2px solid ${lit ? 'rgba(180,180,180,0.7)' : '#1648D8'}`,
           borderRadius: '50%',
           flexShrink: 0,
+          transition: 'border-color 0.3s ease, background 0.3s ease',
         }}
       >
         <div className="relative w-full h-full rounded-full overflow-hidden">
@@ -98,8 +104,8 @@ function Card({ name, role, img, quote, active, onClick }: {
       <div
         className="w-full rounded-3xl pt-14 pb-8 px-6 flex flex-col items-center gap-3 text-center"
         style={{
-          background: active ? '#1648D8' : '#e8edf8',
-          transition: 'background 0.4s ease',
+          background: lit ? '#1648D8' : '#e8edf8',
+          transition: 'background 0.3s ease',
           minHeight: 340,
         }}
       >
@@ -108,19 +114,19 @@ function Card({ name, role, img, quote, active, onClick }: {
           {Array.from({ length: 5 }).map((_, i) => (
             <svg key={i} width="17" height="17" viewBox="0 0 24 24">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-                fill={active ? '#fff' : '#1648D8'} />
+                fill={lit ? '#fff' : '#1648D8'} />
             </svg>
           ))}
         </div>
 
         <div>
-          <p className="font-bold text-[18px] leading-tight" style={{ color: active ? '#fff' : '#111' }}>{name}</p>
-          <p className="mt-0.5 text-[12px]" style={{ color: active ? 'rgba(255,255,255,0.65)' : '#6b7280' }}>{role}</p>
+          <p className="font-bold text-[18px] leading-tight" style={{ color: lit ? '#fff' : '#111' }}>{name}</p>
+          <p className="mt-0.5 text-[12px]" style={{ color: lit ? 'rgba(255,255,255,0.65)' : '#6b7280' }}>{role}</p>
         </div>
 
-        <QuoteIcon active={active} />
+        <QuoteIcon active={lit} />
 
-        <p className="text-[13px] leading-relaxed italic flex-1 flex items-center justify-center" style={{ color: active ? 'rgba(255,255,255,0.88)' : '#374151' }}>
+        <p className="text-[13px] leading-relaxed italic flex-1 flex items-center justify-center" style={{ color: lit ? 'rgba(255,255,255,0.88)' : '#374151' }}>
           {quote}
         </p>
       </div>
@@ -132,7 +138,7 @@ export function TestimonialsSection() {
   const headerRef = useRef<HTMLDivElement>(null)
   const headerInView = useInView(headerRef, { once: true, amount: 0.4 })
 
-  const perView = 3
+  const perView = 4
 
   // offset = index of the leftmost VISIBLE card in ITEMS[]
   // Start in the middle copy so we can silently reset to the 1st copy (same visual content).
