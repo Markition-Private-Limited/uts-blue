@@ -10,43 +10,12 @@ const FALLBACK_VISIBLE_MS = 45000 // true last-resort safety net (45 s)
 const PRELOAD_SRCS = [
   '/logo.png',
   '/loader-car.png',
-  '/hero-bg.png',
   '/hero-bg-new.png',
-  '/hero-bottom-union.png',
-  '/car-hero.png',
   '/chauffeur-bg.webp',
-  '/chauffeur-car.png',
-  '/video-thumb.png',
-  '/mask-group.png',
-  '/how-it-works-bg.png',
-  '/footer-chevron.png',
-  '/about/driver-smile.jpg',
-  '/about/driver-luggage.jpg',
-  '/about/passenger.jpg',
-  '/about/car-door.jpg',
-  '/about/driver-suit.jpg',
-  '/fleet/business-class-mercedes-e-class.webp',
-  '/fleet/economy-saloon-vw-passat.webp',
-  '/fleet/first-class-mercedes-s-class.webp',
-  '/fleet/first-class-van-mercedes-v-class.webp',
-  '/fleet/mpv-vw-sharan.webp',
-  '/fleet/standard-van-hyundai-i800.webp',
-  '/fleet/van-8-9-seater.webp',
-  '/fleet/icons/child-seat-available.png',
-  '/fleet/icons/gps-tracking.png',
-  '/fleet/icons/water-available.png',
-  '/fleet/icons/wifi-available.png',
-  '/services/airport-transfer.jpg',
-  '/why/car-top.png',
-  '/why/chauffeur-v2.png',
-  '/why/coastal-car-v2.png',
-  '/why/door-v2.png',
-  '/why/interior-v2.png',
-  '/testimonials/person-1.jpg',
-  '/testimonials/person-2.jpg',
-  '/testimonials/person-3.jpg',
-  '/testimonials/person-4.jpg',
 ]
+
+const HERO_VIDEO  = '/HERO%20VIDEO/Untitled%20design%20(1)_4K_upscaled_2k.mp4'
+const STATS_VIDEO = '/Video/Video.webm'
 
 
 const STREAKS = [
@@ -84,8 +53,8 @@ export default function PageLoader() {
       return
     }
     carControls.start({
-      x: ['-28vw', '110vw'],
-      transition: { duration: 4.2, ease: [0.4, 0, 0.6, 1], repeat: Infinity, repeatType: 'loop' },
+      x: ['-28vw', '80vw', '-28vw'],
+      transition: { duration: 5, ease: 'easeInOut', repeat: Infinity, repeatType: 'loop', times: [0, 0.5, 1] },
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefersReducedMotion])
@@ -102,42 +71,51 @@ export default function PageLoader() {
   }, [assetsReady])
 
   useEffect(() => {
-    const startedAt = performance.now()
-    void startedAt // used only to satisfy linter; hide timing is now car-driven
-
-    // Progress is purely event-driven from images alone.
-    // Videos are NOT gated — they load naturally via preload="auto" on their elements.
-    const GRAND_TOTAL = PRELOAD_SRCS.length
+    const GRAND_TOTAL = PRELOAD_SRCS.length + 2 // images + 2 videos
     let loaded = 0
-    let domReady = false
-    let allLoaded = false
 
     const onAsset = () => {
       loaded++
       setProgress(Math.min(99, Math.round((loaded / GRAND_TOTAL) * 100)))
-      if (loaded >= GRAND_TOTAL) { allLoaded = true; tryFinish() }
+      if (loaded >= GRAND_TOTAL) setAssetsReady(true)
     }
 
-    const tryFinish = () => {
-      if (!allLoaded || !domReady) return
-      setAssetsReady(true)
-    }
-
+    // Images
     PRELOAD_SRCS.forEach(src => {
       const img = new window.Image()
       img.onload = img.onerror = onAsset
       img.src = src
     })
 
-    if (document.readyState === 'complete') {
-      domReady = true; tryFinish()
-    } else {
-      window.addEventListener('load', () => { domReady = true; tryFinish() }, { once: true })
-    }
+    // Videos — loadeddata fires on first frame, not full download
+    const heroVid = document.createElement('video')
+    heroVid.muted = true
+    heroVid.preload = 'auto'
+    const onHero = () => onAsset()
+    heroVid.addEventListener('loadeddata', onHero, { once: true })
+    heroVid.addEventListener('error',      onHero, { once: true })
+    heroVid.src = HERO_VIDEO
+
+    const statsVid = document.createElement('video')
+    statsVid.muted = true
+    statsVid.preload = 'auto'
+    const onStats = () => onAsset()
+    statsVid.addEventListener('loadeddata', onStats, { once: true })
+    statsVid.addEventListener('error',      onStats, { once: true })
+    statsVid.src = STATS_VIDEO
 
     const fallback = setTimeout(() => setVisible(false), FALLBACK_VISIBLE_MS)
 
-    return () => { clearTimeout(fallback) }
+    return () => {
+      clearTimeout(fallback)
+      const destroy = (v: HTMLVideoElement, fn: () => void) => {
+        v.removeEventListener('loadeddata', fn)
+        v.removeEventListener('error',      fn)
+        v.pause(); v.src = ''; v.load()
+      }
+      destroy(heroVid, onHero)
+      destroy(statsVid, onStats)
+    }
   }, [])
 
   return (

@@ -1,6 +1,6 @@
 export function HeroCircleBadge() {
   // Repeat the phrase so the full circumference is always covered with text
-  const text = "THE UTS EXPERIENCE • THE UTS EXPERIENCE • ";
+  const text = "THE UTS EXPERIENCE •";
   const radius = 34;
   const circumference = 2 * Math.PI * radius;
 
