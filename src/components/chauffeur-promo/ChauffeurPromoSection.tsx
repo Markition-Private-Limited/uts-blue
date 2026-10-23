@@ -62,7 +62,7 @@ export function ChauffeurPromoSection() {
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.3, ease }}
-          className="mt-10"
+          className="mt-5"
         >
           <ChauffeurPromoCTA label={cta.label} href={cta.href} />
         </motion.div>
