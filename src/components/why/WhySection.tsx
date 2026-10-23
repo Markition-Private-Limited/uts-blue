@@ -139,7 +139,9 @@ export function WhySection() {
             animate={sectionInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.12, ease }}
           >
-            <HeroBadge text="Why Travel With UTS" />
+            <div className="-mb-4">
+              <HeroBadge text="Why Travel With UTS" align="left" dividerWidth={24} textColorClass="text-white" />
+            </div>
             <h2 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
               The Difference Is in Every Detail.
             </h2>
