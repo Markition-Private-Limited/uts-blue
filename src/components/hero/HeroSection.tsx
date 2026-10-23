@@ -23,8 +23,7 @@ export function HeroSection() {
         aria-hidden
       >
         <video
-          src="/HERO%20VIDEO/Untitled%20design%20(1)_4K_upscaled.mp4"
-          poster="/hero-bg.png"
+          src="/HERO%20VIDEO/Untitled%20design%20(1)_4K_upscaled.webm"
           autoPlay
           muted
           loop

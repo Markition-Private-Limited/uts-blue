@@ -39,7 +39,7 @@ export function AboutSection() {
 
       {/* Fan carousel */}
       <motion.div
-        className="mt-8 px-6 -mb-16"
+        className="mt-16 px-6 -mb-16"
         initial={{ opacity: 0, y: 32 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.85, delay: 0.18, ease }}

@@ -49,8 +49,8 @@ const PRELOAD_SRCS = [
 ]
 
 // Both videos must have first-frame data before the loader lifts.
-const HERO_VIDEO  = '/HERO%20VIDEO/Untitled%20design%20(1)_4K_upscaled.mp4'
-const STATS_VIDEO = '/Video/Video.mp4'
+const HERO_VIDEO  = '/HERO%20VIDEO/Untitled%20design%20(1)_4K_upscaled.webm'
+const STATS_VIDEO = '/Video/Video.webm'
 
 const STREAKS = [
   { top: '12%', width: 110, duration: '2.70s', delay: '-1.25s' },

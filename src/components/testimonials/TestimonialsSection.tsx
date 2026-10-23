@@ -132,14 +132,7 @@ export function TestimonialsSection() {
   const headerRef = useRef<HTMLDivElement>(null)
   const headerInView = useInView(headerRef, { once: true, amount: 0.4 })
 
-  // Responsive: 4 per view on lg+, 3 otherwise
-  const [perView, setPerView] = useState(4)
-  useEffect(() => {
-    const update = () => setPerView(window.innerWidth >= 1024 ? 4 : 3)
-    update()
-    window.addEventListener('resize', update)
-    return () => window.removeEventListener('resize', update)
-  }, [])
+  const perView = 3
 
   // offset = index of the leftmost VISIBLE card in ITEMS[]
   // Start in the middle copy so we can silently reset to the 1st copy (same visual content).
