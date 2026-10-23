@@ -200,7 +200,7 @@ export function HowItWorksSection() {
               {/* CONTENT — text + watermark only (car is outside this div) */}
               <div className="relative flex flex-1 flex-col items-start justify-center overflow-hidden px-7 py-6">
                 {/* Watermark — crisp SVG, padded equally from top/right */}
-                <div className="pointer-events-none absolute" style={{ top: 24, right: 24, bottom: 0, left: 0 }}>
+                <div className="pointer-events-none absolute" style={{ top: 24, right: 24, bottom: 0, left: 0, transform: 'scale(0.92)', transformOrigin: 'top right' }}>
                   <Image
                     src="/mask-group.svg"
                     alt=""
