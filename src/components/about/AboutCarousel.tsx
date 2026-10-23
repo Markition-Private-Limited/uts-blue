@@ -14,9 +14,9 @@ const CARDS = [
 // ─── Cylinder geometry ────────────────────────────────────────────────────────
 const TOTAL        = CARDS.length;          // 5
 const ANGLE_STEP   = 72;                    // 360° ÷ 5 cards = evenly fills the full circle
-const RADIUS       = 340;                   // cylinder radius — smaller = cards closer together
+const RADIUS       = 440;                   // cylinder radius — smaller = cards closer together
 const PERSPECTIVE  = 3200;                  // very high = almost flat, organised look
-const CARD_W       = 188;                   // card width  (px)
+const CARD_W       = 204;                   // card width  (px)
 const CARD_H       = 360;                   // card height (px)
 const TILT_X       = -1;                    // barely any top-down tilt
 const CENTER_IDX   = Math.floor(TOTAL / 2); // 2

@@ -3,11 +3,11 @@ import Image from "next/image";
 import { ArrowButton } from "./ArrowButton";
 
 const navLinks = [
-  { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "Our Services", href: "/services" },
   { label: "Our Fleet", href: "/#fleet" },
-  { label: "Contact Us", href: "/contact" },
+  { label: "UTS Partners", href: "/partners" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function Navbar() {

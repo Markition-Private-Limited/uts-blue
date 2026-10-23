@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useEffect, useState } from 'react'
-import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
@@ -12,24 +12,41 @@ const STATS: { num: number | null; suffix: string; label: string }[] = [
   { num: null, suffix: '24/7', label: 'Dedicated Support' },
 ]
 
+// Custom ease: rockets off quickly then crawls to a stop as it nears the target.
+// Using a strong deceleration curve — progress = 1 - (1-t)^4 maps t∈[0,1] so that
+// the last 10% of distance takes ~34% of the total time.
+function easeOutQuart(t: number): number {
+  return 1 - Math.pow(1 - t, 4)
+}
+
 function AnimatedStat({ num, suffix, label }: { num: number | null; suffix: string; label: string }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, amount: 0.5 })
-  const count = useMotionValue(0)
-  const rounded = useTransform(count, (v) => Math.round(v))
+  const [display, setDisplay] = useState(0)
 
   useEffect(() => {
     if (!inView || num === null) return
-    const controls = animate(count, num, { duration: 2, ease: 'easeOut' })
-    return controls.stop
-  }, [inView, count, num])
+    const duration = 2400 // ms
+    const startTime = performance.now()
+    let raf: number
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime
+      const t = Math.min(elapsed / duration, 1)
+      const eased = easeOutQuart(t)
+      setDisplay(Math.round(eased * num))
+      if (t < 1) raf = requestAnimationFrame(tick)
+    }
+
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [inView, num])
 
   return (
     <div ref={ref} className="flex flex-col items-center gap-1 text-center">
       {num !== null ? (
         <span className="text-4xl font-bold text-gray-900">
-          <motion.span>{rounded}</motion.span>
-          {suffix}
+          {display}{suffix}
         </span>
       ) : (
         <span className="text-4xl font-bold text-gray-900">{suffix}</span>
@@ -54,22 +71,16 @@ export function VideoStatsSection() {
   useEffect(() => {
     const v = videoRef.current
     if (!v) return
-    let inView = false
-    const apply = () => setMuted(inView ? userMutedRef.current : true)
     const observer = new IntersectionObserver(
       ([entry]) => {
-        inView = entry.intersectionRatio >= 0.5
-        apply()
+        const visible = entry.intersectionRatio >= 0.5
+        // Only auto-unmute when coming into view and user hasn't explicitly muted
+        setMuted(visible ? userMutedRef.current : true)
       },
       { threshold: 0.5 }
     )
     observer.observe(v)
-    const gestures = ['pointerup', 'click', 'keydown', 'touchend'] as const
-    gestures.forEach((g) => window.addEventListener(g, apply, { passive: true }))
-    return () => {
-      observer.disconnect()
-      gestures.forEach((g) => window.removeEventListener(g, apply))
-    }
+    return () => { observer.disconnect() }
   }, [])
 
   // Keep the element in sync with state (React only sets `muted` on mount).

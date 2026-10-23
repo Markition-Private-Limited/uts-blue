@@ -3,6 +3,7 @@ import { Arimo } from "next/font/google";
 import { SmoothScrollProvider } from "@/providers/SmoothScrollProvider";
 import "./globals.css";
 import { FooterSection } from "@/components/footer";
+import PageLoader from "@/components/ui/PageLoader";
 
 const arimo = Arimo({
   subsets: ["latin"],
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${arimo.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-white text-gray-900 font-[family-name:var(--font-arimo)]">
+        <PageLoader />
         <SmoothScrollProvider>
           {children}
           <FooterSection />
