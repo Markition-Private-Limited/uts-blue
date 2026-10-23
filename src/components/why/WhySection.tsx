@@ -143,7 +143,9 @@ export function WhySection() {
               <HeroBadge text="Why Travel With UTS" align="left" dividerWidth={24} textColorClass="text-white" />
             </div>
             <h2 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-              The Difference Is in Every Detail.
+              The Difference Is in
+              <br />
+              Every Detail.
             </h2>
             <p className="text-[15px] leading-relaxed text-white/70">
               At United Travel Services, great service goes beyond getting you to your
@@ -182,6 +184,10 @@ export function WhySection() {
             <div
               aria-hidden
               className="pointer-events-none select-none absolute inset-x-0 top-0 bottom-0 translate-x-[10px] overflow-hidden"
+              style={{
+                maskImage: 'linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%)',
+              }}
             >
               <div className="rides-ticker-inner">
                 {[0, 1].map((i) => (

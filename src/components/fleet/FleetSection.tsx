@@ -212,9 +212,8 @@ export function FleetSection() {
         className="mx-auto max-w-2xl px-6 text-center mb-8"
       >
         <HeroBadge text="Our Premium Fleet" variant="blue" />
-        <h2 className="mt-5 text-3xl font-bold leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
-          Luxury Chauffeur Cars for{' '}
-          <span style={{ color: '#1648D8', fontStyle: 'italic' }}>Every Journey</span>
+        <h2 className="mt-5 mx-auto text-3xl font-bold leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
+          Luxury Chauffeur Cars for <span style={{ color: '#1648D8' }}>Every Journey</span>
         </h2>
         <p className="mt-4 text-[15px] leading-relaxed text-gray-500">
           Discover a carefully selected range of chauffeur vehicles for business travel, airport

@@ -120,13 +120,13 @@ function Card({ name, role, img, quote, active, onClick }: {
         </div>
 
         <div>
-          <p className="font-bold text-[18px] leading-tight" style={{ color: lit ? '#fff' : '#111' }}>{name}</p>
-          <p className="mt-0.5 text-[12px]" style={{ color: lit ? 'rgba(255,255,255,0.65)' : '#6b7280' }}>{role}</p>
+          <p className="font-bold text-[21px] leading-tight" style={{ color: lit ? '#fff' : '#111' }}>{name}</p>
+          <p className="mt-0.5 text-[14px]" style={{ color: lit ? 'rgba(255,255,255,0.65)' : '#6b7280' }}>{role}</p>
         </div>
 
         <QuoteIcon active={lit} />
 
-        <p className="text-[13px] leading-relaxed italic flex-1 flex items-center justify-center" style={{ color: lit ? 'rgba(255,255,255,0.88)' : '#374151' }}>
+        <p className="text-[15px] leading-relaxed italic flex-1 flex items-center justify-center" style={{ color: lit ? 'rgba(255,255,255,0.88)' : '#374151' }}>
           {quote}
         </p>
       </div>
@@ -203,9 +203,8 @@ export function TestimonialsSection() {
         className="mx-auto max-w-2xl px-6 text-center mb-2"
       >
         <HeroBadge text="Our Clients, Our Priority" variant="blue" />
-        <h2 className="mt-5 text-3xl font-bold leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
-          Real Journeys.{' '}
-          <span style={{ color: '#1648D8', fontStyle: 'italic' }}>Lasting Impressions.</span>
+        <h2 className="mt-5 w-fit mx-auto whitespace-nowrap text-3xl font-bold leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
+          Real Journeys. <span style={{ color: '#1648D8' }}>Lasting Impressions.</span>
         </h2>
         <p className="mt-4 text-[15px] leading-relaxed text-gray-500">
           The best journeys are remembered for how they make you feel. We aim to deliver a
