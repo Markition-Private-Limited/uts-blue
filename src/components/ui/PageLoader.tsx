@@ -52,18 +52,29 @@ export default function PageLoader() {
       carControls.set({ x: 'calc(50vw - 50%)' })
       return
     }
-    carControls.start({
-      x: ['-28vw', '80vw', '-28vw'],
-      transition: { duration: 5, ease: 'easeInOut', repeat: Infinity, repeatType: 'loop', times: [0, 0.5, 1] },
-    })
+    let active = true
+    carControls.set({ x: '-28vw', scaleX: 1 })
+    const loop = async () => {
+      while (active) {
+        await carControls.start({ x: '80vw',  transition: { duration: 2.5, ease: 'easeInOut' } })
+        if (!active) break
+        carControls.set({ scaleX: -1 })
+        await carControls.start({ x: '-28vw', transition: { duration: 2.5, ease: 'easeInOut' } })
+        if (!active) break
+        carControls.set({ scaleX: 1 })
+      }
+    }
+    loop()
+    return () => { active = false }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prefersReducedMotion])
 
-  // When assets are ready: speed up the car, then hide on exit
+  // When assets are ready: flip to face right, then exit right
   useEffect(() => {
     if (!assetsReady) return
     setProgress(100)
     if (prefersReducedMotion) { setVisible(false); return }
+    carControls.set({ scaleX: 1 })
     carControls
       .start({ x: '110vw', transition: { duration: 1.4, ease: [0.4, 0, 0.8, 1] } })
       .then(() => setVisible(false))
