@@ -50,7 +50,7 @@ export function BookingSidebar2({
   const labelCls = "text-[10px] uppercase font-bold tracking-wider text-slate-400 block";
 
   return (
-    <aside className="no-scrollbar w-full shrink-0 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:w-[360px] lg:self-start lg:overflow-y-auto xl:w-[390px]">
+    <aside data-lenis-prevent className="no-scrollbar overscroll-contain w-full shrink-0 lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:w-[360px] lg:self-start lg:overflow-y-auto xl:w-[390px]">
       <div className="divide-y divide-slate-100 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         {/* 1. Route overview graphic — dark accent panel */}
         <div className="relative border-b border-slate-100 bg-slate-50 p-4">
