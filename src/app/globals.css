@@ -103,3 +103,55 @@ body::-webkit-scrollbar {
   display: none;
 }
 
+/* ── Button hover: a dark-blue fill grows out of the arrow / icon end ───────
+   Applies to every <button> (opt out with .no-fill) and to link-buttons that
+   carry .btn-fill. Same easing + duration as the arrow-fill-button component.
+   Layout bits live in @layer components so Tailwind utilities (e.g. .absolute)
+   still win; the hover text colour needs !important to beat per-button colours. */
+:root {
+  --btn-fill: #0a2470;
+}
+@layer components {
+  :where(button:not(.no-fill), .btn-fill) {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  :where(button:not(.no-fill):not(:disabled), .btn-fill)::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: var(--btn-fill);
+    clip-path: circle(0% at var(--fill-x, calc(100% - 1.5rem)) 50%);
+    transition: clip-path 450ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  }
+  :where(button:not(.no-fill):not(:disabled), .btn-fill):is(:hover, :focus-visible)::before {
+    clip-path: circle(150% at var(--fill-x, calc(100% - 1.5rem)) 50%);
+  }
+}
+/* The fill inverts the button: blue / white-text buttons fill white (text turns blue);
+   white / light buttons fill dark blue (text turns white). ButtonFillTone sets
+   data-tone from the button's resting text colour when the pointer or focus arrives. */
+:is(button:not(.no-fill), .btn-fill)[data-tone="on-dark"] {
+  --btn-fill: #ffffff;
+}
+:is(button:not(.no-fill), .btn-fill)[data-tone="on-light"] {
+  --btn-fill: #0a2470;
+}
+:is(button:not(.no-fill):not(:disabled), .btn-fill)[data-tone="on-dark"]:is(:hover, :focus-visible) {
+  color: #1648d8 !important;
+}
+:is(button:not(.no-fill):not(:disabled), .btn-fill)[data-tone="on-light"]:is(:hover, :focus-visible) {
+  color: #ffffff !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(button:not(.no-fill):not(:disabled), .btn-fill)::before {
+    transition: none;
+  }
+}
+
+
+
+

@@ -267,6 +267,7 @@ export function TestimonialsSection() {
               setOffset(newOffset)
               startTimer()
             }}
+            className="no-fill"
             aria-label={`Go to testimonial ${i + 1}`}
             style={{
               width: dotActiveIdx === i ? 28 : 8,

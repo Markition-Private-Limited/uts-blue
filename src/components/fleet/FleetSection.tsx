@@ -101,13 +101,13 @@ function FleetCard({ car, i }: { car: (typeof FLEET)[number]; i: number }) {
           Call Now
         </button>
         <Link href="/book"
-          className="flex-1 inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-lg px-1 max-xl:[&>svg]:hidden py-2 text-[12px] font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
+          className="btn-fill flex-1 inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-lg px-1 max-xl:[&>svg]:hidden py-2 text-[12px] font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
           style={{ background: '#22c55e' }}
         >
           <CalendarCheck size={12} />
           Book Now
         </Link>
-        <Link href="/book" className="flex-1 inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-lg px-1 max-xl:[&>svg]:hidden border border-blue-200 py-2 text-[12px] font-semibold text-blue-700 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100 hover:bg-blue-50">
+        <Link href="/book" className="btn-fill flex-1 inline-flex items-center justify-center gap-1 whitespace-nowrap rounded-lg px-1 max-xl:[&>svg]:hidden border border-blue-200 py-2 text-[12px] font-semibold text-blue-700 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100 hover:bg-blue-50">
           <MessageSquare size={12} />
           Enquiry
         </Link>
@@ -287,7 +287,7 @@ export function FleetSection() {
               goToPage(i)
             }}
             aria-label={`Go to slide ${i + 1}`}
-            className="rounded-full transition-all duration-300 hover:scale-125"
+            className="no-fill rounded-full transition-all duration-300 hover:scale-125"
             style={{
               width: edge.page === i ? 20 : 8,
               height: 8,

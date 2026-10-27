@@ -92,7 +92,7 @@ export function HowItWorksSection() {
 
           <div className="mt-8">
             <a href="#fleet"
-              className="inline-flex items-center gap-3 rounded-full py-1 pl-1 pr-5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
+              className="btn-fill [--fill-x:1.5rem] inline-flex items-center gap-3 rounded-full py-1 pl-1 pr-5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
               style={{
                 background: 'rgba(255,255,255,0.15)',
                 backdropFilter: 'blur(10px)',

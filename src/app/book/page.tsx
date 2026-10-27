@@ -1,75 +1,103 @@
-import type { Metadata } from "next";
-import { Cinzel } from "next/font/google";
-import { Navbar } from "@/components/navbar";
-import { BookingWidget } from "@/components/booking/BookingWidget";
-import { FadeInSection } from "@/components/ui/FadeInSection";
-import { WhySection } from "@/components/why/WhySection";
-import { TestimonialsSection } from "@/components/testimonials/TestimonialsSection";
-import { ChauffeurPromoSection } from "@/components/chauffeur-promo";
+"use client";
 
-const cinzel = Cinzel({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  variable: "--font-cinzel",
-});
-
-export const metadata: Metadata = {
-  title: "Book Your Chauffeur — UTS Blue",
-  description: "Bespoke chauffeur reservations with United Travel Services.",
-};
+import { useState } from "react";
+import { BookmarkCheck } from "lucide-react";
+import { ServiceHeaderBar2 } from "@/components/booking2/ServiceHeaderBar2";
+import { ServicePage2 } from "@/components/booking2/ServicePage2";
+import { BookingSidebar2 } from "@/components/booking2/BookingSidebar2";
+import { BookingReviewModal2 } from "@/components/booking2/BookingReviewModal2";
+import {
+  FLEET2,
+  defaultBookingState2,
+  type BookingState2,
+  type ServiceType2,
+  type VehicleTier2,
+} from "@/lib/booking2";
 
 export default function BookPage() {
+  const [currentService, setCurrentService] = useState<ServiceType2>("airport-transfer");
+  const [bookingState, setBookingState] = useState<BookingState2>(defaultBookingState2());
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [reviewOpen, setReviewOpen] = useState(false);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const handleServiceChange = (service: ServiceType2) => {
+    setCurrentService(service);
+    setBookingState((s) => ({ ...s, serviceType: service }));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const updateBookingState = (updates: Partial<BookingState2>) => setBookingState((s) => ({ ...s, ...updates }));
+
+  const selectedVehicle = FLEET2.find((v) => v.id === bookingState.selectedVehicleId) || FLEET2[0];
+  const handleSelectVehicle = (id: VehicleTier2) => updateBookingState({ selectedVehicleId: id });
+
+  const handleSaveJourney = () => {
+    try {
+      localStorage.setItem("uts_chauffeur_booking_data", JSON.stringify(bookingState));
+      showToast("Journey details saved to browser storage.");
+    } catch {
+      showToast("Details saved for this session.");
+    }
+  };
+
+  const handleContinue = () => {
+    if (currentService !== "airport-transfer" && bookingState.durationHours < 4) {
+      showToast("Minimum booking duration of 4 hours is required.");
+      return;
+    }
+    setReviewOpen(true);
+  };
+
+  const pickupSummary = "The Langham, London";
+  const destinationSummary = currentService === "airport-transfer" ? "Heathrow T5 (LHR)" : undefined;
+  const dateTimeSummary =
+    currentService === "airport-transfer"
+      ? `${bookingState.pickupDate} · ${bookingState.pickupTime} · ${bookingState.transferDirection === "departure" ? "Departure" : "Arrival"}`
+      : `${bookingState.pickupDate} · ${bookingState.pickupTime} · ${bookingState.durationHours} Hours`;
+
   return (
-    <div className={`${cinzel.variable} relative min-h-screen bg-[#050B22]`}>
-      <Navbar />
+    <div className="min-h-screen bg-white">
+      {toastMessage && (
+        <div className="fixed right-6 top-6 z-[60] flex items-center gap-2.5 rounded-xl border border-white/10 bg-[#0B1330] px-4 py-3 text-xs font-semibold text-white shadow-2xl">
+          <BookmarkCheck className="h-4 w-4 text-emerald-400" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
 
-      {/* Same hero video + dark blue gradient as the home page */}
-      <div className="fixed inset-0 z-0 overflow-hidden" aria-hidden>
-        <video
-          src="/HERO%20VIDEO/Untitled%20design%20(1)_4K_upscaled.mp4"
-          poster="/hero-bg.png"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          className="h-full w-full select-none object-cover object-center"
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              'linear-gradient(180deg, rgba(5,11,34,0.88) 0%, rgba(10,26,85,0.74) 45%, rgba(5,11,34,0.93) 100%)',
-          }}
-        />
-      </div>
+      <ServiceHeaderBar2
+        currentService={currentService}
+        onServiceChange={handleServiceChange}
+        pickupSummary={pickupSummary}
+        destinationSummary={destinationSummary}
+        dateTimeSummary={dateTimeSummary}
+      />
 
-      <main className="relative z-10 flex flex-col items-center px-4 pb-16 pt-32 md:pb-24 md:pt-40">
-        <header className="mb-6 text-center md:mb-8">
-          <p className="mb-1 text-xs uppercase tracking-[0.25em] text-[#9DB0E3] md:text-sm">
-            United Travel Services
-          </p>
-          <h1 className="text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
-            Your Journey, Perfectly Arranged
-          </h1>
-          <p className="mt-1 text-xs uppercase tracking-widest text-[#9DB0E3]">Bespoke Chauffeur Reservations</p>
-        </header>
+      <main className="mx-auto w-full max-w-[1520px] px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+        <div className="flex flex-col items-start gap-8 lg:flex-row xl:gap-12">
+          <ServicePage2
+            serviceType={currentService}
+            state={bookingState}
+            selectedVehicle={selectedVehicle}
+            onSelectVehicle={handleSelectVehicle}
+            onUpdateState={updateBookingState}
+          />
 
-        <BookingWidget />
+          <BookingSidebar2
+            state={bookingState}
+            selectedVehicle={selectedVehicle}
+            onUpdateState={updateBookingState}
+            onContinue={handleContinue}
+            onSave={handleSaveJourney}
+          />
+        </div>
       </main>
 
-      {/* Home-page sections, from "The Difference Is in Every Detail." onwards */}
-      <div className="relative z-10 bg-white pb-12 pt-4">
-        <FadeInSection>
-          <WhySection />
-        </FadeInSection>
-        <FadeInSection>
-          <TestimonialsSection />
-        </FadeInSection>
-        <FadeInSection>
-          <ChauffeurPromoSection />
-        </FadeInSection>
-      </div>
+      <BookingReviewModal2 isOpen={reviewOpen} onClose={() => setReviewOpen(false)} state={bookingState} vehicle={selectedVehicle} />
     </div>
   );
 }
