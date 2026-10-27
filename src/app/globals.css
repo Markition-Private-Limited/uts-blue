@@ -154,4 +154,13 @@ body::-webkit-scrollbar {
 
 
 
+/* Very slight fade-in for the wide banner image when the selected vehicle changes */
+@keyframes bannerFade {
+  from { opacity: 0.55; }
+  to   { opacity: 1; }
+}
+.banner-fade {
+  animation: bannerFade 0.7s ease-out both;
+}
+
 

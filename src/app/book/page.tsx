@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BookmarkCheck } from "lucide-react";
+import { DRAFT_KEY, type BookingDraft } from "@/lib/booking";
 import { ServiceHeaderBar2 } from "@/components/booking2/ServiceHeaderBar2";
 import { ServicePage2 } from "@/components/booking2/ServicePage2";
 import { BookingSidebar2 } from "@/components/booking2/BookingSidebar2";
@@ -14,11 +15,38 @@ import {
   type VehicleTier2,
 } from "@/lib/booking2";
 
+const MONTH_NAMES = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+/** 2026-11-14 -> "14 November 2026" (the format this page uses for dates). */
+function longDate(iso: string): string {
+  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${Number(m[3])} ${MONTH_NAMES[Number(m[2]) - 1]} ${m[1]}` : iso;
+}
+
 export default function BookPage() {
   const [currentService, setCurrentService] = useState<ServiceType2>("airport-transfer");
   const [bookingState, setBookingState] = useState<BookingState2>(defaultBookingState2());
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [reviewOpen, setReviewOpen] = useState(false);
+
+  // Arrived from the home page hero? Fill the pickup and date the visitor already entered.
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(DRAFT_KEY);
+      if (!raw) return;
+      sessionStorage.removeItem(DRAFT_KEY);
+      const draft = JSON.parse(raw) as BookingDraft;
+      setBookingState((s) => ({
+        ...s,
+        pickupAddress: draft.pickup?.trim() || s.pickupAddress,
+        pickupDate: draft.date ? longDate(draft.date) : s.pickupDate,
+      }));
+      setToastMessage("Your pickup and date from the homepage have been filled in.");
+      setTimeout(() => setToastMessage(null), 3500);
+    } catch {
+      /* nothing saved, or storage unavailable — keep the defaults */
+    }
+  }, []);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -53,7 +81,7 @@ export default function BookPage() {
     setReviewOpen(true);
   };
 
-  const pickupSummary = "The Langham, London";
+  const pickupSummary = bookingState.pickupAddress;
   const destinationSummary = currentService === "airport-transfer" ? "Heathrow T5 (LHR)" : undefined;
   const dateTimeSummary =
     currentService === "airport-transfer"

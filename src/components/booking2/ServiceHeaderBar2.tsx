@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, PlaneTakeoff, Sun, Clock, ChevronDown } from "lucide-react";
+import { MapPin, PlaneTakeoff, Sun, Clock, ChevronDown, ChevronLeft } from "lucide-react";
 import { SERVICE_LABELS2, type ServiceType2 } from "@/lib/booking2";
 
 const TABS: { key: ServiceType2; label: string; icon: typeof PlaneTakeoff }[] = [
@@ -32,17 +32,31 @@ export function ServiceHeaderBar2({
   return (
     <div className="sticky top-0 z-40 border-b border-white/10 bg-[#050B22]/95 backdrop-blur-md">
       <div className="mx-auto grid max-w-[1520px] grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-4 py-2.5 sm:px-6 lg:px-8">
-        {/* Logo — left */}
-        <Link href="/" aria-label="United Travel Services — home" className="flex items-center justify-self-start">
-          <Image
-            src="/logo.png"
-            alt="United Travel Services"
-            width={180}
-            height={64}
-            className="h-12 w-auto object-contain sm:h-14"
-            priority
-          />
-        </Link>
+        {/* Back arrow + logo — left */}
+        <div className="flex items-center gap-3 justify-self-start">
+          <Link
+            href="/"
+            aria-label="Back to homepage"
+            title="Back to homepage"
+            className="group -ml-1 flex h-10 w-8 shrink-0 items-center justify-center text-white/60 transition-colors duration-300 hover:text-white"
+          >
+            <ChevronLeft
+              strokeWidth={1.25}
+              className="h-7 w-7 transition-transform duration-300 ease-out group-hover:-translate-x-1"
+            />
+          </Link>
+          <span aria-hidden className="h-6 w-px bg-white/15" />
+          <Link href="/" aria-label="United Travel Services — home" className="flex items-center">
+            <Image
+              src="/logo.png"
+              alt="United Travel Services"
+              width={180}
+              height={64}
+              className="h-12 w-auto object-contain sm:h-14"
+              priority
+            />
+          </Link>
+        </div>
 
         {/* Active service — centre; the other two appear on hover */}
         <div

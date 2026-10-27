@@ -76,9 +76,9 @@ export function VehicleSelector2({
               }`}
             >
               <div>
-                <div className="relative mb-3 aspect-[571/330] overflow-hidden rounded-xl border border-slate-100 bg-slate-50">
+                <div className="relative mb-3 aspect-[9/10] overflow-hidden rounded-xl border border-slate-100 bg-slate-50">
                   <Image
-                    src={vehicle.image}
+                    src={vehicle.image.replace("-1.webp", "-1-card.webp")}
                     alt={vehicle.name}
                     fill
                     sizes="310px"

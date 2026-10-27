@@ -19,6 +19,8 @@ export interface Vehicle2 {
   passengers: number;
   luggage: number;
   image: string;
+  /** Wide banner shown under the vehicle cards for the selected class. */
+  image2: string;
   description: string;
   features: string[];
   /** £ per unit for each service; null = "price to be confirmed". */
@@ -50,7 +52,8 @@ export interface BookingState2 {
   specialInstructions: string;
 }
 
-// Same seven classes and photography as the Fleet section on the home page.
+// Same seven classes, order and photography as the UTS 2nd variation booking page
+// (card photo = -1, wide banner = -2, in /public/images/fleet-cards).
 export const FLEET2: Vehicle2[] = [
   {
     id: "business",
@@ -58,7 +61,8 @@ export const FLEET2: Vehicle2[] = [
     modelExample: "Mercedes-Benz E-Class or similar",
     passengers: 3,
     luggage: 2,
-    image: "/fleet/business-class-mercedes-e-class.webp",
+    image: "/images/fleet-cards/business-class-1.webp",
+    image2: "/images/fleet-cards/business-class-2.webp",
     description:
       "Refined executive travel for every journey. Business Class provides a composed, private environment with a professional chauffeur and full luggage assistance.",
     features: [
@@ -72,12 +76,33 @@ export const FLEET2: Vehicle2[] = [
     hourlyRateHour: 60,
   },
   {
+    id: "first-class-van",
+    name: "First Class Van",
+    modelExample: "Mercedes-Benz V-Class or similar",
+    passengers: 6,
+    luggage: 5,
+    image: "/images/fleet-cards/first-class-van-1.webp",
+    image2: "/images/fleet-cards/first-class-van-2.webp",
+    description:
+      "Unmatched spacious luxury for groups, executive delegations, and families requiring extensive luggage capacity without compromising sophistication.",
+    features: [
+      "Conference-style luxury leather seating",
+      "Ambient cabin lighting",
+      "Generous luggage compartment",
+      "Privacy glass and dedicated rear passenger climate",
+    ],
+    airportRateKm: null,
+    dayRateHour: null,
+    hourlyRateHour: null,
+  },
+  {
     id: "first",
     name: "First Class",
     modelExample: "Mercedes-Benz S-Class or similar",
     passengers: 3,
-    luggage: 3,
-    image: "/fleet/first-class-mercedes-s-class.webp",
+    luggage: 2,
+    image: "/images/fleet-cards/first-class-1.webp",
+    image2: "/images/fleet-cards/first-class-2.webp",
     description:
       "The pinnacle of automotive luxury and prestige. An extraordinarily quiet cabin, acoustic glazing, and sublime ride comfort for discerning travellers.",
     features: [
@@ -96,7 +121,8 @@ export const FLEET2: Vehicle2[] = [
     modelExample: "Volkswagen Passat / Kia Niro or similar",
     passengers: 3,
     luggage: 2,
-    image: "/fleet/economy-saloon-vw-passat.webp",
+    image: "/images/fleet-cards/economy-saloon-1.webp",
+    image2: "/images/fleet-cards/economy-saloon-2.webp",
     description:
       "Dependable, understated executive transportation offering clean comfort, punctuality, and professional chauffeur standards across London.",
     features: [
@@ -113,9 +139,10 @@ export const FLEET2: Vehicle2[] = [
     id: "mpv",
     name: "MPV",
     modelExample: "Volkswagen Sharan / Ford Galaxy or similar",
-    passengers: 7,
-    luggage: 5,
-    image: "/fleet/mpv-vw-sharan.webp",
+    passengers: 4,
+    luggage: 3,
+    image: "/images/fleet-cards/mpv-1.webp",
+    image2: "/images/fleet-cards/mpv-2.webp",
     description:
       "Versatile multi-passenger vehicle offering flexible seating configurations, ideal for small groups with extra luggage.",
     features: [
@@ -129,31 +156,13 @@ export const FLEET2: Vehicle2[] = [
     hourlyRateHour: 80,
   },
   {
-    id: "first-class-van",
-    name: "First Class Van",
-    modelExample: "Mercedes-Benz V-Class or similar",
-    passengers: 6,
-    luggage: 6,
-    image: "/fleet/first-class-van-mercedes-v-class.webp",
-    description:
-      "Unmatched spacious luxury for groups, executive delegations, and families requiring extensive luggage capacity without compromising sophistication.",
-    features: [
-      "Conference-style luxury leather seating",
-      "Ambient cabin lighting",
-      "Generous luggage compartment",
-      "Privacy glass and dedicated rear passenger climate",
-    ],
-    airportRateKm: null,
-    dayRateHour: null,
-    hourlyRateHour: null,
-  },
-  {
     id: "van",
     name: "Van (8-9 Seater)",
-    modelExample: "8/9 - Seater Van",
+    modelExample: "Hyundai i800 / Volkswagen Transporter or similar",
     passengers: 8,
-    luggage: 8,
-    image: "/fleet/van-8-9-seater.webp",
+    luggage: 6,
+    image: "/images/fleet-cards/standard-van-1.webp",
+    image2: "/images/fleet-cards/standard-van-2.webp",
     description:
       "High-capacity passenger vehicle suited for corporate shuttles, production crews, and extended family transfers.",
     features: [
@@ -169,10 +178,11 @@ export const FLEET2: Vehicle2[] = [
   {
     id: "standard-van",
     name: "Standard Van",
-    modelExample: "Hyundai i800 / VW Transporter or similar",
-    passengers: 6,
-    luggage: 6,
-    image: "/fleet/standard-van-hyundai-i800.webp",
+    modelExample: "Hyundai i800 / Volkswagen Transporter or similar",
+    passengers: 7,
+    luggage: 5,
+    image: "/images/fleet-cards/standard-van-1.webp",
+    image2: "/images/fleet-cards/standard-van-2.webp",
     description:
       "Practical, spacious group transfer vehicle delivering reliable group transportation with generous boot volume.",
     features: [

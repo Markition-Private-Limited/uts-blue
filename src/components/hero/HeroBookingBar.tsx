@@ -1,14 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useBookingModal } from "@/components/booking/BookingModal";
+import { useRouter } from "next/navigation";
 import { DRAFT_KEY, tomorrowISO, type BookingDraft } from "@/lib/booking";
+import { DateField, LocationField } from "./HeroFields";
 
 const EMPTY_DRAFT: BookingDraft = { name: "", phone: "", pickup: "", date: "" };
 
 export function HeroBookingBar() {
-  const { open: openBooking } = useBookingModal();
+  const router = useRouter();
   const [draft, setDraft] = useState<BookingDraft>(EMPTY_DRAFT);
+  const [showErrors, setShowErrors] = useState(false);
 
   // Earliest selectable date — read after mount so no Date is evaluated during render.
   const [minDate, setMinDate] = useState<string | undefined>(undefined);
@@ -24,12 +26,24 @@ export function HeroBookingBar() {
 
   const set = (patch: Partial<BookingDraft>) => setDraft((d) => ({ ...d, ...patch }));
 
-  // Open the booking form as a popup over the home page, pre-filled from the bar.
+  // Go to the booking page with the details entered here.
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    openBooking({ ...draft, date: draft.date || tomorrowISO() });
-    // Reset the bar so it is empty again once the popup is closed.
+    // Pickup location and date are required: underline whatever is missing in red.
+    if (!draft.pickup.trim() || !draft.date) {
+      setShowErrors(true);
+      return;
+    }
+    // Hand the details to the booking page (it fills its own fields from them).
+    try {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    } catch {
+      /* storage unavailable — the booking page simply opens with its defaults */
+    }
+    // Reset the bar so it is empty again when the visitor comes back to the home page.
     setDraft(EMPTY_DRAFT);
+    setShowErrors(false);
+    router.push("/book");
   };
 
   return (
@@ -38,11 +52,11 @@ export function HeroBookingBar() {
       autoComplete="off"
       className="w-full rounded-2xl border border-white/10 px-6 py-5"
       style={{
-        backgroundColor: "rgba(0, 0, 0, 0.2)",
-        backdropFilter: "blur(16px)",
-        WebkitBackdropFilter: "blur(16px)",
+        backgroundColor: "rgba(0, 0, 0, 0.10)",
+        backdropFilter: "blur(2px)",
+        WebkitBackdropFilter: "blur(2px)",
         backgroundImage:
-          "radial-gradient(rgba(0,0,0,0.15), rgba(0,0,0,0) 90%), radial-gradient(circle at 80% 200%, rgba(255,255,255,0.25), rgba(255,255,255,0) 80%), linear-gradient(rgba(15,19,25,0.2), rgba(15,19,25,0.2))",
+          "linear-gradient(rgba(15,19,25,0.08), rgba(15,19,25,0.08))",
         boxShadow:
           "0 2px 8px 0 rgba(6,10,13,0.12), inset 4px 4px 8px rgba(0,0,0,0.06)",
       }}
@@ -74,21 +88,18 @@ export function HeroBookingBar() {
             value={draft.phone}
             onChange={(phone) => set({ phone })}
           />
-          <BookingField
+          <LocationField
             label="Pickup Location"
             placeholder="Enter Location"
-            type="text"
-            required
             value={draft.pickup}
+            invalid={showErrors && !draft.pickup.trim()}
             onChange={(pickup) => set({ pickup })}
           />
-          <BookingField
+          <DateField
             label="Pickup Date"
-            placeholder="dd/mm/yyyy"
-            type="date"
-            required
             min={minDate}
             value={draft.date}
+            invalid={showErrors && !draft.date}
             onChange={(date) => set({ date })}
           />
         </div>
@@ -96,7 +107,7 @@ export function HeroBookingBar() {
         {/* Find Your Ride button */}
         <button
           type="submit"
-          className="shrink-0 rounded-full px-4 py-2 text-xs font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
+          className="shrink-0 rounded-full px-6 py-3 text-sm font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
           style={{
             background: "#194BD9",
           }}

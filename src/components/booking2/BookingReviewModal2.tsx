@@ -71,7 +71,7 @@ Estimated Total: ${priceCalc.total !== null ? `£${priceCalc.total.toFixed(2)}` 
         <div className="space-y-5 p-6">
           <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-3.5">
             <div className="relative h-[72px] w-24 shrink-0 overflow-hidden rounded-lg border border-slate-200">
-              <Image src={vehicle.image} alt={vehicle.name} fill sizes="96px" className="object-cover" />
+              <Image src={vehicle.image.replace("-1.webp", "-1-thumb.webp")} alt={vehicle.name} fill sizes="96px" className="object-cover" />
             </div>
             <div className="flex-1">
               <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Vehicle Allocated</span>
