@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Users } from "lucide-react";
-import type { Vehicle2 } from "@/lib/booking2";
+import { getLuggageImage, type Vehicle2 } from "@/lib/booking2";
 
 const LUGGAGE_OPTIONS = [
   { id: "carry-on" as const, label: "2 × Carry-on", subtitle: "Cabin bags (up to 55 × 40 × 20 cm)" },
@@ -75,8 +75,9 @@ export function CapacityLuggage2({
 
           <div className="relative aspect-[1024/374] overflow-hidden rounded-2xl bg-[#050B22] shadow-md">
             <Image
-              src="/booking/images/uts_open_trunk_v2.png"
-              alt={`${selectedVehicle.name} luggage capacity`}
+              key={`${selectedVehicle.id}-${currentLuggageType}`}
+              src={getLuggageImage(selectedVehicle.id, currentLuggageType)}
+              alt={`${selectedVehicle.name} luggage capacity — ${LUGGAGE_OPTIONS.find((o) => o.id === currentLuggageType)?.label}`}
               fill
               sizes="100vw"
               className="object-cover"

@@ -197,6 +197,21 @@ export const FLEET2: Vehicle2[] = [
   },
 ];
 
+// Maps each vehicle class onto its luggage-photo folder in /public/luggage.
+const LUGGAGE_FOLDER: Record<VehicleTier2, string> = {
+  economy: "economy-saloon",
+  business: "business-class",
+  first: "first-class",
+  mpv: "mpv",
+  "first-class-van": "first-class-van",
+  van: "van",
+  "standard-van": "standard-van",
+};
+
+export function getLuggageImage(vehicleId: VehicleTier2, luggageType: "carry-on" | "check-in" | "large"): string {
+  return `/luggage/${LUGGAGE_FOLDER[vehicleId]}/${luggageType}.png`;
+}
+
 export interface PriceCalculation2 {
   baseFare: number | null;
   rateLabel: string;
