@@ -89,7 +89,10 @@ export function ServicePage2({
             ))}
           </div>
         )}
-        <h1 className="mb-3 text-3xl font-extrabold tracking-tight leading-tight text-[#0B1330] sm:text-4xl lg:text-[42px]">
+        <h1
+          className="mb-3 text-3xl font-black uppercase tracking-tight leading-tight text-[#0B1330] sm:text-4xl lg:text-[42px]"
+          style={{ WebkitTextStroke: "0.6px #0B1330" }}
+        >
           {copy.title}
         </h1>
         <p className="max-w-2xl text-sm font-normal leading-relaxed text-slate-600 sm:text-base">{copy.description}</p>

@@ -83,7 +83,7 @@ export function CapacityLuggage2({
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#050B22]/80 via-[#050B22]/10 to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-xl bg-[#050B22]/85 px-4 py-2.5 text-xs text-white backdrop-blur-md">
+            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-xl bg-[#050B22]/50 px-4 py-2.5 text-xs text-white backdrop-blur-sm">
               <div>
                 <span className="font-semibold">{selectedVehicle.name} Luggage Volume</span>
                 <p className="text-[11px] text-slate-300">
