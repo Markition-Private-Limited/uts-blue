@@ -123,6 +123,7 @@ export function VideoStatsSection() {
             muted={muted}
             loop
             playsInline
+            preload="auto"
             className="h-full w-full select-none object-cover"
             style={{ aspectRatio: '16 / 6.5', maxHeight: 480, objectPosition: 'center center', filter: 'saturate(1.25)' }}
           />
