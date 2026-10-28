@@ -92,7 +92,7 @@ export function HowItWorksSection() {
 
           <div className="mt-8">
             <a href="#fleet"
-              className="btn-fill [--fill-x:1.5rem] inline-flex items-center gap-3 rounded-full py-1 pl-1 pr-5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
+              className="group btn-fill [--fill-x:1.5rem] inline-flex items-center gap-3 rounded-full py-1 pl-1 pr-5 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:scale-105"
               style={{
                 background: 'rgba(255,255,255,0.15)',
                 backdropFilter: 'blur(10px)',
@@ -100,8 +100,13 @@ export function HowItWorksSection() {
                 border: '1px solid rgba(255,255,255,0.30)',
               }}
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white">
-                <ArrowRight size={14} color={BLUE} />
+              {/* Inverts to a blue circle with a white arrow on hover, in step with the
+                  pill's own white hover fill, so it stays legible instead of vanishing into it. */}
+              <span
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white transition-colors duration-300 ease-out group-hover:bg-[#1648D8]"
+                style={{ color: BLUE }}
+              >
+                <ArrowRight size={14} className="transition-colors duration-300 ease-out group-hover:text-white" />
               </span>
               Explore Our Fleet
             </a>

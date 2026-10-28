@@ -155,7 +155,7 @@ export function WhySection() {
             </p>
             <div>
               <button
-                className="inline-flex items-center gap-3 rounded-full py-2 pl-2 pr-6 text-[14px] font-medium text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
+                className="group inline-flex items-center gap-3 rounded-full py-2 pl-2 pr-6 text-[14px] font-medium text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100"
                 style={{
                   background: 'rgba(255,255,255,0.12)',
                   backdropFilter: 'blur(10px)',
@@ -163,11 +163,12 @@ export function WhySection() {
                   border: '1px solid rgba(255,255,255,0.22)',
                 }}
               >
+                {/* Inverts to a solid blue circle with a white arrow on hover, in step with
+                    the button's own white hover fill, so it stays legible instead of vanishing into it. */}
                 <span
-                  className="flex h-9 w-9 items-center justify-center rounded-full"
-                  style={{ background: 'rgba(255,255,255,0.20)' }}
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-[rgba(255,255,255,0.20)] text-white transition-colors duration-300 ease-out group-hover:bg-[#1648D8]"
                 >
-                  <ArrowRight size={16} color="white" />
+                  <ArrowRight size={16} />
                 </span>
                 Discover Our Story
               </button>

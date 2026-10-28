@@ -83,14 +83,16 @@ export function CapacityLuggage2({
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#050B22]/80 via-[#050B22]/10 to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-xl bg-[#050B22]/50 px-4 py-2.5 text-xs text-white backdrop-blur-sm">
+            <div
+              className="absolute bottom-4 left-4 right-4 flex items-center justify-between rounded-xl border border-white/15 bg-[#050B22]/40 px-5 py-3.5 font-sans text-sm text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.4)] backdrop-blur-md backdrop-saturate-150"
+            >
               <div>
-                <span className="font-semibold">{selectedVehicle.name} Luggage Volume</span>
-                <p className="text-[11px] text-slate-300">
+                <span className="font-normal">{selectedVehicle.name} Luggage Volume</span>
+                <p className="text-xs font-light text-slate-300">
                   {LUGGAGE_OPTIONS.find((o) => o.id === currentLuggageType)?.subtitle}
                 </p>
               </div>
-              <span className="rounded-md bg-white/15 px-2.5 py-1 text-[11px] font-medium text-white">
+              <span className="rounded-md bg-white/15 px-2.5 py-1 text-xs font-light text-white">
                 Max {selectedVehicle.luggage} Standard Bags
               </span>
             </div>

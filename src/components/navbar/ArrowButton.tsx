@@ -32,24 +32,26 @@ export function ArrowButton({ label, href, variant, className = "", onClick }: A
             }
           : undefined
       }
-      className={`btn-fill [--fill-x:1.5rem] inline-flex items-center gap-3 rounded-full py-1 pl-1 pr-5 text-sm font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100 ${className}`}
+      className={`group btn-fill [--fill-x:1.5rem] inline-flex items-center gap-3 rounded-full py-1 pl-1 pr-5 text-sm font-semibold text-white transition-all duration-300 ease-out hover:-translate-y-0.5 hover:scale-105 hover:shadow-lg active:translate-y-0 active:scale-100 ${className}`}
       style={variant === "blue" ? blueStyle : outlineStyle}
     >
-      {/* Solid white circle — flush to left edge (pl-1 gives ~4px gap) */}
-      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white">
-        <ArrowIcon color={variant === "blue" ? "#1648D8" : "#1648D8"} />
+      {/* Solid white circle — flush to left edge (pl-1 gives ~4px gap).
+          Inverts to a blue circle with a white arrow on hover, in step with the
+          pill's own white hover fill, so it stays legible instead of vanishing into it. */}
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-[#1648D8] transition-colors duration-300 ease-out group-hover:bg-[#1648D8] group-hover:text-white">
+        <ArrowIcon />
       </span>
       {label}
     </Link>
   );
 }
 
-function ArrowIcon({ color }: { color: string }) {
+function ArrowIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden>
       <path
         d="M2 7H12M8 3L12 7L8 11"
-        stroke={color}
+        stroke="currentColor"
         strokeWidth="1.75"
         strokeLinecap="round"
         strokeLinejoin="round"
