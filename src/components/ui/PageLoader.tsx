@@ -82,7 +82,7 @@ export default function PageLoader() {
   }, [assetsReady])
 
   useEffect(() => {
-    const GRAND_TOTAL = PRELOAD_SRCS.length + 2 // images + 2 videos
+    const GRAND_TOTAL = PRELOAD_SRCS.length + 1 // images + hero video only
     let loaded = 0
 
     const onAsset = () => {
@@ -98,7 +98,7 @@ export default function PageLoader() {
       img.src = src
     })
 
-    // Videos — loadeddata fires on first frame, not full download
+    // Hero video — blocks the loader until first frame is ready
     const heroVid = document.createElement('video')
     heroVid.muted = true
     heroVid.preload = 'auto'
@@ -107,25 +107,20 @@ export default function PageLoader() {
     heroVid.addEventListener('error',      onHero, { once: true })
     heroVid.src = HERO_VIDEO
 
+    // Stats video — preload silently in background, never blocks the loader
     const statsVid = document.createElement('video')
     statsVid.muted = true
     statsVid.preload = 'auto'
-    const onStats = () => onAsset()
-    statsVid.addEventListener('loadeddata', onStats, { once: true })
-    statsVid.addEventListener('error',      onStats, { once: true })
     statsVid.src = STATS_VIDEO
 
     const fallback = setTimeout(() => setVisible(false), FALLBACK_VISIBLE_MS)
 
     return () => {
       clearTimeout(fallback)
-      const destroy = (v: HTMLVideoElement, fn: () => void) => {
-        v.removeEventListener('loadeddata', fn)
-        v.removeEventListener('error',      fn)
-        v.pause(); v.src = ''; v.load()
-      }
-      destroy(heroVid, onHero)
-      destroy(statsVid, onStats)
+      heroVid.removeEventListener('loadeddata', onHero)
+      heroVid.removeEventListener('error',      onHero)
+      heroVid.pause(); heroVid.src = ''; heroVid.load()
+      statsVid.pause(); statsVid.src = ''; statsVid.load()
     }
   }, [])
 
