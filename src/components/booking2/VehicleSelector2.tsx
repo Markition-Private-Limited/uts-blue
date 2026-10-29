@@ -28,6 +28,10 @@ export function VehicleSelector2({
   // Which card the slider is currently showing (drives the dots below it).
   const [activeIndex, setActiveIndex] = useState(0);
 
+  // Card width computed so exactly 3 fit in the viewport at once.
+  const GAP_PX = 16;
+  const [cardWidth, setCardWidth] = useState(280);
+
   const viewportRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const offsetRef = useRef(0); // current translateX target (<= 0)
@@ -203,11 +207,15 @@ export function VehicleSelector2({
     }
   };
 
-  // Keep the track inside its bounds if the layout changes under it.
+  // Keep the track inside its bounds and recompute card widths when layout changes.
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport) return;
     const ro = new ResizeObserver(() => {
+      const vpw = viewport.clientWidth;
+      // Show 3 cards on wide screens, 2 on narrow, minimum 200px per card.
+      const perRow = vpw >= 600 ? 3 : 2;
+      setCardWidth(Math.max(200, Math.floor((vpw - (perRow - 1) * GAP_PX) / perRow)));
       const { max } = metrics();
       const x = Math.max(-max, Math.min(0, offsetRef.current));
       apply(x, false);
@@ -235,9 +243,9 @@ export function VehicleSelector2({
         onClickCapture={handleClickCapture}
         onDragStart={(e) => e.preventDefault()}
         style={{ touchAction: "pan-y" }}
-        className="cursor-grab select-none overflow-hidden pb-4 pt-1"
+        className="w-full cursor-grab select-none overflow-hidden pb-4 pt-1"
       >
-        <div ref={trackRef} className="relative flex w-max gap-4 will-change-transform sm:gap-5">
+        <div ref={trackRef} className="relative flex w-max will-change-transform" style={{ gap: GAP_PX }}>
           {FLEET2.map((vehicle) => {
             const isSelected = vehicle.id === selectedVehicleId;
             const priceCalc = calculatePrice2(serviceType, vehicle, { distanceKm, durationHours });
@@ -246,7 +254,8 @@ export function VehicleSelector2({
               <div
                 key={vehicle.id}
                 onClick={() => onSelectVehicle(vehicle.id)}
-                className={`group flex w-[280px] shrink-0 cursor-pointer flex-col justify-between rounded-2xl border bg-white p-3 shadow-sm transition-all sm:w-[310px] sm:p-3.5 ${
+                style={{ width: cardWidth }}
+                className={`group flex shrink-0 cursor-pointer flex-col justify-between rounded-2xl border bg-white p-3 shadow-sm transition-all sm:p-3.5 ${
                   isSelected ? "border-[#1648D8] shadow-md ring-1 ring-[#1648D8]/25" : "border-slate-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
                 }`}
               >
@@ -256,7 +265,7 @@ export function VehicleSelector2({
                       src={vehicle.image.replace("-1.webp", "-1-card.webp")}
                       alt={vehicle.name}
                       fill
-                      sizes="310px"
+                      sizes="33vw"
                       draggable={false}
                       className="pointer-events-none select-none object-cover transition-transform duration-500 group-hover:scale-[1.05]"
                     />

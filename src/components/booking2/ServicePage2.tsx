@@ -77,7 +77,7 @@ export function ServicePage2({
   const handleRemoveStop = (id: string) => onUpdateState({ stops: state.stops.filter((s) => s.id !== id) });
 
   return (
-    <div className="min-w-0 flex-1">
+    <div className="min-w-0 w-full flex-1">
       <div className="mb-10">
         {copy.eyebrow && (
           <div className="mb-2 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#1648D8]">
